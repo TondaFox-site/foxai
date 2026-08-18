@@ -1,2 +1,2 @@
 # foxai
-zkusebni projekt webove ai od ai
+zkuśebni projekt webove ai od ai
