@@ -1,0 +1,3197 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FoxAI - TondaFox AI Project 1</title>
+
+<script src="https://js.puter.com/v2/"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f4f6fb;
+    color: #202124;
+
+    overflow: hidden;
+
+    transition:
+        background 0.25s,
+        color 0.25s;
+}
+
+body.dark {
+    background: #121418;
+    color: #f1f3f4;
+}
+
+/* =========================================
+   APLIKACE
+   ========================================= */
+
+.app {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   HORNÍ LIŠTA
+   ========================================= */
+
+.topbar {
+    height: 68px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        0 20px;
+
+    background:
+        rgba(255, 255, 255, 0.94);
+
+    border-bottom:
+        1px solid #e1e4ea;
+
+    backdrop-filter:
+        blur(12px);
+}
+
+body.dark .topbar {
+    background:
+        rgba(25, 27, 32, 0.96);
+
+    border-color:
+        #30343b;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff7a00,
+            #ff3d00
+        );
+
+    color: white;
+
+    font-size: 22px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(255, 100, 0, 0.25);
+}
+
+.brand-name {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.brand-project {
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    color: #777d87;
+}
+
+body.dark .brand-project {
+    color: #aeb4bd;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+.icon-button {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: inherit;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        transform 0.2s;
+}
+
+.icon-button:hover {
+    background: #eef0f5;
+}
+
+body.dark .icon-button:hover {
+    background: #292d34;
+}
+
+.icon-button:active {
+    transform: scale(0.93);
+}
+
+/* =========================================
+   OBLAST ZPRÁV
+   ========================================= */
+
+.messages {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding:
+        25px 18px 25px;
+}
+
+.messages-inner {
+    width: 100%;
+    max-width: 920px;
+
+    min-height: 100%;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================
+   UVÍTÁNÍ
+   ========================================= */
+
+.welcome {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding:
+        30px 20px;
+}
+
+.welcome-icon {
+    width: 82px;
+    height: 82px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 20px;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff7a00,
+            #ff3d00
+        );
+
+    color: white;
+
+    font-size: 40px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(255, 100, 0, 0.25);
+}
+
+.welcome h1 {
+    font-size: 32px;
+
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    max-width: 600px;
+
+    color: #727782;
+
+    line-height: 1.6;
+
+    font-size: 15px;
+}
+
+body.dark .welcome p {
+    color: #aeb4bd;
+}
+
+/* =========================================
+   ZPRÁVA
+   ========================================= */
+
+.message {
+    display: flex;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+
+    animation:
+        messageAppear 0.2s ease;
+}
+
+@keyframes messageAppear {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0);
+    }
+
+}
+
+.message.user {
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 39px;
+    height: 39px;
+
+    min-width: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #e9ebf1;
+
+    font-size: 17px;
+}
+
+body.dark .message-avatar {
+    background: #292d34;
+}
+
+.message.ai .message-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #ff7a00,
+            #ff3d00
+        );
+
+    color: white;
+}
+
+.message.user .message-avatar {
+    background:
+        linear-gradient(
+            135deg,
+            #6c63ff,
+            #8b5cf6
+        );
+
+    color: white;
+}
+
+.message-content {
+    max-width: 82%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.message.user .message-content {
+    align-items: flex-end;
+}
+
+.message-author {
+    margin-bottom: 5px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: #737983;
+}
+
+body.dark .message-author {
+    color: #aeb4bd;
+}
+
+.message-text {
+    padding:
+        13px 16px;
+
+    border-radius: 16px;
+
+    background: white;
+
+    border:
+        1px solid #e5e7ec;
+
+    line-height: 1.6;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+    overflow-wrap: anywhere;
+}
+
+body.dark .message-text {
+    background: #202329;
+
+    border-color:
+        #30343b;
+}
+
+.message.user .message-text {
+    background:
+        linear-gradient(
+            135deg,
+            #6c63ff,
+            #765eea
+        );
+
+    color: white;
+
+    border: 0;
+
+    border-radius:
+        16px 16px 4px 16px;
+}
+
+/* =========================================
+   KÓD
+   ========================================= */
+
+.code-block {
+    width: 100%;
+
+    margin:
+        10px 0;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    background: #17191d;
+
+    color: #f4f5f7;
+
+    text-align: left;
+}
+
+.code-header {
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        0 10px;
+
+    background: #24272d;
+
+    border-bottom:
+        1px solid #343840;
+
+    font-size: 11px;
+
+    color: #b9bec7;
+}
+
+.copy-code {
+    padding:
+        6px 9px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    background: #363a42;
+
+    color: #fff;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.copy-code:hover {
+    background: #464b55;
+}
+
+.code-content {
+    display: block;
+
+    padding:
+        14px;
+
+    overflow-x: auto;
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size: 13px;
+
+    line-height: 1.55;
+
+    white-space: pre;
+
+    tab-size: 4;
+}
+
+/* =========================================
+   PÍŠE...
+   ========================================= */
+
+.typing {
+    display: none;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.typing.visible {
+    display: flex;
+}
+
+.typing-dots {
+    display: flex;
+
+    gap: 4px;
+
+    padding:
+        12px 15px;
+
+    border-radius: 15px;
+
+    background: white;
+
+    border:
+        1px solid #e5e7ec;
+}
+
+body.dark .typing-dots {
+    background: #202329;
+
+    border-color:
+        #30343b;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #858b96;
+
+    animation:
+        typingAnimation
+        1.2s infinite;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay:
+        0.15s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay:
+        0.3s;
+}
+
+@keyframes typingAnimation {
+
+    0%,
+    60%,
+    100% {
+        transform:
+            translateY(0);
+
+        opacity:
+            0.5;
+    }
+
+    30% {
+        transform:
+            translateY(-4px);
+
+        opacity:
+            1;
+    }
+
+}
+
+/* =========================================
+   VSTUP
+   ========================================= */
+
+.composer {
+    flex-shrink: 0;
+
+    padding:
+        10px 18px 17px;
+
+    background:
+        linear-gradient(
+            to top,
+            #f4f6fb 75%,
+            rgba(244, 246, 251, 0)
+        );
+}
+
+body.dark .composer {
+    background:
+        linear-gradient(
+            to top,
+            #121418 75%,
+            rgba(18, 20, 24, 0)
+        );
+}
+
+.composer-inner {
+    width: 100%;
+    max-width: 920px;
+
+    margin: 0 auto;
+}
+
+.input-box {
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 9px;
+
+    padding:
+        8px 8px 8px 16px;
+
+    background: white;
+
+    border:
+        1px solid #dfe2e8;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 5px 25px
+        rgba(30, 35, 50, 0.07);
+}
+
+body.dark .input-box {
+    background: #202329;
+
+    border-color:
+        #353941;
+
+    box-shadow:
+        0 5px 25px
+        rgba(0, 0, 0, 0.18);
+}
+
+.input-box:focus-within {
+    border-color:
+        #ff6b00;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(255, 107, 0, 0.10);
+}
+
+#input {
+    flex: 1;
+
+    min-height: 42px;
+    max-height: 180px;
+
+    resize: none;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: inherit;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+
+    padding:
+        10px 0;
+}
+
+#input::placeholder {
+    color: #9ba0a9;
+}
+
+.send-button {
+    width: 44px;
+    height: 44px;
+
+    min-width: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff7a00,
+            #ff3d00
+        );
+
+    color: white;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        opacity 0.2s;
+}
+
+.send-button:hover {
+    transform:
+        translateY(-1px);
+}
+
+.send-button:active {
+    transform:
+        scale(0.94);
+}
+
+.send-button:disabled {
+    opacity: 0.5;
+
+    cursor: default;
+
+    transform: none;
+}
+
+.composer-info {
+    margin-top: 7px;
+
+    text-align: center;
+
+    font-size: 11px;
+
+    color: #969ba5;
+}
+
+/* =========================================
+   NASTAVENÍ
+   ========================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0, 0, 0, 0.42);
+
+    backdrop-filter:
+        blur(5px);
+}
+
+.modal.visible {
+    display: flex;
+}
+
+.settings {
+    width: 100%;
+    max-width: 500px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 22px;
+
+    border-radius: 22px;
+
+    background: white;
+
+    color: #202124;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0, 0, 0, 0.25);
+}
+
+body.dark .settings {
+    background: #202329;
+
+    color: #f1f3f4;
+}
+
+.settings-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+.settings-header h2 {
+    font-size: 21px;
+}
+
+.close {
+    width: 38px;
+    height: 38px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background: #f0f1f5;
+
+    color: #555;
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+body.dark .close {
+    background: #2c3037;
+
+    color: #ddd;
+}
+
+.setting {
+    margin-bottom: 21px;
+}
+
+.setting label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+.setting select,
+.setting input[type="password"],
+.setting input[type="text"] {
+    width: 100%;
+
+    height: 44px;
+
+    padding:
+        0 12px;
+
+    border:
+        1px solid #dfe2e8;
+
+    border-radius: 11px;
+
+    background: white;
+
+    color: #202124;
+
+    outline: none;
+}
+
+body.dark .setting select,
+body.dark .setting input[type="password"],
+body.dark .setting input[type="text"] {
+    background: #292d34;
+
+    border-color:
+        #3b4048;
+
+    color: #f1f3f4;
+}
+
+.setting input[type="range"] {
+    width: 100%;
+
+    accent-color:
+        #ff6500;
+}
+
+.range-value {
+    display: inline-block;
+
+    margin-top: 6px;
+
+    padding:
+        4px 9px;
+
+    border-radius: 7px;
+
+    background: #f0f1f5;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+body.dark .range-value {
+    background: #2c3037;
+}
+
+.api-info {
+    margin-top: 8px;
+
+    padding:
+        10px 12px;
+
+    border-radius: 10px;
+
+    background: #f1f3f8;
+
+    color: #656b75;
+
+    font-size: 12px;
+
+    line-height: 1.45;
+}
+
+body.dark .api-info {
+    background: #292d34;
+
+    color: #b8bdc6;
+}
+
+.settings-actions {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 26px;
+}
+
+.settings-actions button {
+    flex: 1;
+
+    min-height: 45px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.save-settings {
+    background:
+        linear-gradient(
+            135deg,
+            #ff7a00,
+            #ff3d00
+        );
+
+    color: white;
+}
+
+.delete-data {
+    background: #feecec;
+
+    color: #c62828;
+}
+
+body.dark .delete-data {
+    background: #392628;
+
+    color: #ff8d8d;
+}
+
+/* =========================================
+   MOBIL
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .topbar {
+        height: 60px;
+
+        padding:
+            0 11px;
+    }
+
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 11px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .messages {
+        padding:
+            18px 11px 15px;
+    }
+
+    .message-content {
+        max-width: 84%;
+    }
+
+    .composer {
+        padding:
+            8px 11px 12px;
+    }
+
+    .welcome h1 {
+        font-size: 27px;
+    }
+
+    .settings-actions {
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🦊
+            </div>
+
+            <div>
+
+                <div class="brand-name">
+                    FoxAI
+                </div>
+
+                <div class="brand-project">
+                    TondaFox AI Project 1
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="top-actions">
+
+            <button
+                class="icon-button"
+                id="newChat"
+                title="Nový chat"
+            >
+                ＋
+            </button>
+
+            <button
+                class="icon-button"
+                id="themeButton"
+                title="Světlý / tmavý režim"
+            >
+                🌙
+            </button>
+
+            <button
+                class="icon-button"
+                id="settingsButton"
+                title="Nastavení"
+            >
+                ⚙️
+            </button>
+
+        </div>
+
+    </header>
+
+    <main
+        class="messages"
+        id="messages"
+    >
+
+        <div class="messages-inner">
+
+            <div
+                class="welcome"
+                id="welcome"
+            >
+
+                <div class="welcome-icon">
+                    🦊
+                </div>
+
+                <h1>
+                    Vítej ve FoxAI
+                </h1>
+
+                <p>
+                    TondaFox AI Project 1.
+                    Umím odpovídat na otázky,
+                    pomáhat s programováním
+                    a vytvářet kód.
+                </p>
+
+            </div>
+
+            <div
+                class="typing"
+                id="typing"
+            >
+
+                <div class="message-avatar">
+                    🦊
+                </div>
+
+                <div class="typing-dots">
+
+                    <span class="typing-dot"></span>
+
+                    <span class="typing-dot"></span>
+
+                    <span class="typing-dot"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="composer">
+
+        <div class="composer-inner">
+
+            <div class="input-box">
+
+                <textarea
+                    id="input"
+                    rows="1"
+                    placeholder="Napiš FoxAI zprávu..."
+                ></textarea>
+
+                <button
+                    class="send-button"
+                    id="send"
+                    title="Odeslat"
+                >
+                    ➤
+                </button>
+
+            </div>
+
+            <div class="composer-info">
+                Enter = odeslat · Shift + Enter = nový řádek
+            </div>
+
+        </div>
+
+    </footer>
+
+</div>
+
+<!-- =====================================
+     NASTAVENÍ
+     ===================================== -->
+
+<div
+    class="modal"
+    id="settingsModal"
+>
+
+    <div class="settings">
+
+        <div class="settings-header">
+
+            <h2>
+                ⚙️ Nastavení FoxAI
+            </h2>
+
+            <button
+                class="close"
+                id="closeSettings"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div class="setting">
+
+            <label for="provider">
+                🧠 AI služba
+            </label>
+
+            <select id="provider">
+
+                <option value="puter">
+                    Puter AI — bez vlastního API
+                </option>
+
+                <option value="google">
+                    Google Gemini — vlastní API
+                </option>
+
+            </select>
+
+        </div>
+
+        <div
+            class="setting"
+            id="puterModelSetting"
+        >
+
+            <label for="puterModel">
+                🤖 Puter AI model
+            </label>
+
+            <select id="puterModel">
+
+                <option value="gpt-5-nano">
+                    GPT-5 Nano
+                </option>
+
+                <option value="gpt-5.4-nano">
+                    GPT-5.4 Nano
+                </option>
+
+                <option value="gemini-3.1-flash-lite">
+                    Gemini 3.1 Flash Lite
+                </option>
+
+            </select>
+
+            <div class="api-info">
+                Puter AI nevyžaduje vlastní
+                API klíč FoxAI.
+            </div>
+
+        </div>
+
+        <div
+            class="setting"
+            id="googleModelSetting"
+            style="display:none;"
+        >
+
+            <label for="googleModel">
+                🤖 Google Gemini model
+            </label>
+
+            <select id="googleModel">
+
+                <option value="gemini-3.6-flash">
+                    Gemini 3.6 Flash
+                </option>
+
+            </select>
+
+        </div>
+
+        <div
+            class="setting"
+            id="apiKeySetting"
+            style="display:none;"
+        >
+
+            <label for="apiKey">
+                🔑 Google Gemini API klíč
+            </label>
+
+            <input
+                id="apiKey"
+                type="password"
+                placeholder="Vlož API klíč"
+                autocomplete="off"
+            >
+
+        </div>
+
+        <div class="setting">
+
+            <label for="temperature">
+                🌡️ Teplota
+            </label>
+
+            <input
+                id="temperature"
+                type="range"
+                min="0"
+                max="2"
+                step="0.1"
+                value="0.7"
+            >
+
+            <span
+                class="range-value"
+                id="temperatureValue"
+            >
+                0.7
+            </span>
+
+        </div>
+
+        <div class="setting">
+
+            <label for="maxTokens">
+                📝 Délka odpovědi
+            </label>
+
+            <input
+                id="maxTokens"
+                type="range"
+                min="100"
+                max="4000"
+                step="100"
+                value="800"
+            >
+
+            <span
+                class="range-value"
+                id="maxTokensValue"
+            >
+                800
+            </span>
+
+        </div>
+
+        <div class="settings-actions">
+
+            <button
+                class="save-settings"
+                id="saveSettings"
+            >
+                ✓ Uložit
+            </button>
+
+            <button
+                class="delete-data"
+                id="deleteData"
+            >
+                🗑️ Smazat data
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+/* =========================================
+   PRVKY
+   ========================================= */
+
+const messages =
+    document.getElementById("messages");
+
+const input =
+    document.getElementById("input");
+
+const send =
+    document.getElementById("send");
+
+const welcome =
+    document.getElementById("welcome");
+
+const typing =
+    document.getElementById("typing");
+
+const status =
+    document.getElementById("status");
+
+const themeButton =
+    document.getElementById("themeButton");
+
+const newChat =
+    document.getElementById("newChat");
+
+const settingsButton =
+    document.getElementById("settingsButton");
+
+const settingsModal =
+    document.getElementById("settingsModal");
+
+const closeSettings =
+    document.getElementById("closeSettings");
+
+const saveSettings =
+    document.getElementById("saveSettings");
+
+const deleteData =
+    document.getElementById("deleteData");
+
+const provider =
+    document.getElementById("provider");
+
+const puterModel =
+    document.getElementById("puterModel");
+
+const googleModel =
+    document.getElementById("googleModel");
+
+const apiKey =
+    document.getElementById("apiKey");
+
+const puterModelSetting =
+    document.getElementById("puterModelSetting");
+
+const googleModelSetting =
+    document.getElementById("googleModelSetting");
+
+const apiKeySetting =
+    document.getElementById("apiKeySetting");
+
+const temperature =
+    document.getElementById("temperature");
+
+const temperatureValue =
+    document.getElementById("temperatureValue");
+
+const maxTokens =
+    document.getElementById("maxTokens");
+
+const maxTokensValue =
+    document.getElementById("maxTokensValue");
+
+
+/* =========================================
+   NASTAVENÍ
+   ========================================= */
+
+const vychoziNastaveni = {
+
+    provider: "puter",
+
+    puterModel:
+        "gpt-5-nano",
+
+    googleModel:
+        "gemini-3.6-flash",
+
+    apiKey: "",
+
+    temperature: 0.7,
+
+    maxTokens: 800,
+
+    theme: "light"
+
+};
+
+let nastaveni;
+
+try {
+
+    nastaveni =
+        JSON.parse(
+            localStorage.getItem(
+                "foxai_settings"
+            ) || "{}"
+        );
+
+} catch {
+
+    nastaveni = {};
+
+}
+
+nastaveni = {
+
+    ...vychoziNastaveni,
+    ...nastaveni
+
+};
+
+
+let historie;
+
+try {
+
+    historie =
+        JSON.parse(
+            localStorage.getItem(
+                "foxai_history"
+            ) || "[]"
+        );
+
+} catch {
+
+    historie = [];
+
+}
+
+
+let generuje = false;
+
+
+/* =========================================
+   NAČTENÍ NASTAVENÍ
+   ========================================= */
+
+provider.value =
+    nastaveni.provider;
+
+puterModel.value =
+    nastaveni.puterModel;
+
+googleModel.value =
+    nastaveni.googleModel;
+
+apiKey.value =
+    nastaveni.apiKey;
+
+temperature.value =
+    nastaveni.temperature;
+
+maxTokens.value =
+    nastaveni.maxTokens;
+
+temperatureValue.textContent =
+    nastaveni.temperature;
+
+maxTokensValue.textContent =
+    nastaveni.maxTokens;
+
+
+/* =========================================
+   TÉMA
+   ========================================= */
+
+if (
+    nastaveni.theme === "dark"
+) {
+
+    document.body.classList.add(
+        "dark"
+    );
+
+    themeButton.textContent =
+        "☀️";
+
+}
+
+
+/* =========================================
+   ZOBRAZENÍ PROVIDERA
+   ========================================= */
+
+function aktualizovatProvider() {
+
+    const google =
+        provider.value === "google";
+
+    if (google) {
+
+        puterModelSetting.style.display =
+            "none";
+
+        googleModelSetting.style.display =
+            "block";
+
+        apiKeySetting.style.display =
+            "block";
+
+    } else {
+
+        puterModelSetting.style.display =
+            "block";
+
+        googleModelSetting.style.display =
+            "none";
+
+        apiKeySetting.style.display =
+            "none";
+
+    }
+
+}
+
+aktualizovatProvider();
+
+provider.addEventListener(
+    "change",
+    aktualizovatProvider
+);
+
+
+/* =========================================
+   ULOŽENÍ NASTAVENÍ
+   ========================================= */
+
+function ulozitNastaveni() {
+
+    nastaveni = {
+
+        provider:
+            provider.value,
+
+        puterModel:
+            puterModel.value,
+
+        googleModel:
+            googleModel.value,
+
+        apiKey:
+            apiKey.value.trim(),
+
+        temperature:
+            Number(
+                temperature.value
+            ),
+
+        maxTokens:
+            Number(
+                maxTokens.value
+            ),
+
+        theme:
+            document.body.classList.contains(
+                "dark"
+            )
+                ? "dark"
+                : "light"
+
+    };
+
+    localStorage.setItem(
+        "foxai_settings",
+        JSON.stringify(
+            nastaveni
+        )
+    );
+
+}
+
+
+/* =========================================
+   HISTORIE
+   ========================================= */
+
+function ulozitHistorii() {
+
+    localStorage.setItem(
+        "foxai_history",
+        JSON.stringify(
+            historie
+        )
+    );
+
+}
+
+
+/* =========================================
+   BEZPEČNÉ VYTAŽENÍ TEXTU Z PUTER
+   ========================================= */
+
+function ziskatTextZPuter(
+    odpoved
+) {
+
+    if (
+        typeof odpoved ===
+        "string"
+    ) {
+
+        return odpoved;
+
+    }
+
+    if (!odpoved) {
+
+        return "";
+
+    }
+
+
+    if (
+        typeof odpoved.message ===
+        "string"
+    ) {
+
+        return odpoved.message;
+
+    }
+
+
+    if (
+        odpoved.message &&
+        typeof odpoved.message.content ===
+        "string"
+    ) {
+
+        return odpoved.message.content;
+
+    }
+
+
+    if (
+        odpoved.message &&
+        Array.isArray(
+            odpoved.message.content
+        )
+    ) {
+
+        return odpoved.message.content
+            .map(
+                cast => {
+
+                    if (
+                        typeof cast ===
+                        "string"
+                    ) {
+
+                        return cast;
+
+                    }
+
+                    if (
+                        cast &&
+                        typeof cast.text ===
+                        "string"
+                    ) {
+
+                        return cast.text;
+
+                    }
+
+                    return "";
+
+                }
+            )
+            .join("");
+
+    }
+
+
+    if (
+        typeof odpoved.content ===
+        "string"
+    ) {
+
+        return odpoved.content;
+
+    }
+
+
+    if (
+        typeof odpoved.text ===
+        "string"
+    ) {
+
+        return odpoved.text;
+
+    }
+
+
+    /*
+       Důležité:
+
+       Pokud Puter vrátí objekt,
+       už ho nikdy nezobrazíme
+       jako [object Object].
+    */
+
+    return "";
+
+}
+
+
+/* =========================================
+   TEXT → HTML S KÓDEM
+   ========================================= */
+
+function escapeHTML(
+    text
+) {
+
+    return text
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================
+   ZPRACOVÁNÍ KÓDOVÝCH BLOKŮ
+   ========================================= */
+
+function vytvoritObsahZpravy(
+    text
+) {
+
+    const fragment =
+        document.createDocumentFragment();
+
+    /*
+       Podporuje:
+
+       ```html
+       ...
+       ```
+
+       ```python
+       ...
+       ```
+
+       i obyčejné textové odpovědi.
+    */
+
+    const regex =
+        /```([a-zA-Z0-9_+#.-]*)\n?([\s\S]*?)```/g;
+
+    let posledni =
+        0;
+
+    let shoda;
+
+    while (
+        (shoda = regex.exec(text))
+        !== null
+    ) {
+
+        const pred =
+            text.slice(
+                posledni,
+                shoda.index
+            );
+
+        if (pred) {
+
+            const p =
+                document.createElement(
+                    "span"
+                );
+
+            p.textContent =
+                pred;
+
+            fragment.appendChild(
+                p
+            );
+
+        }
+
+
+        const jazyk =
+            shoda[1] ||
+            "code";
+
+        const kod =
+            shoda[2]
+                .replace(
+                    /^\n/,
+                    ""
+                )
+                .replace(
+                    /\n$/,
+                    ""
+                );
+
+
+        const blok =
+            document.createElement(
+                "div"
+            );
+
+        blok.className =
+            "code-block";
+
+
+        const hlavicka =
+            document.createElement(
+                "div"
+            );
+
+        hlavicka.className =
+            "code-header";
+
+
+        const jazykSpan =
+            document.createElement(
+                "span"
+            );
+
+        jazykSpan.textContent =
+            jazyk.toUpperCase();
+
+
+        const kopirovat =
+            document.createElement(
+                "button"
+            );
+
+        kopirovat.className =
+            "copy-code";
+
+        kopirovat.textContent =
+            "📋 Kopírovat";
+
+
+        kopirovat.addEventListener(
+            "click",
+            async () => {
+
+                try {
+
+                    await navigator.clipboard
+                        .writeText(
+                            kod
+                        );
+
+                    kopirovat.textContent =
+                        "✓ Zkopírováno";
+
+                    setTimeout(
+                        () => {
+
+                            kopirovat.textContent =
+                                "📋 Kopírovat";
+
+                        },
+                        1500
+                    );
+
+                } catch {
+
+                    kopirovat.textContent =
+                        "❌ Nelze kopírovat";
+
+                }
+
+            }
+        );
+
+
+        hlavicka.appendChild(
+            jazykSpan
+        );
+
+        hlavicka.appendChild(
+            kopirovat
+        );
+
+
+        const pre =
+            document.createElement(
+                "pre"
+            );
+
+        pre.className =
+            "code-content";
+
+        pre.textContent =
+            kod;
+
+
+        blok.appendChild(
+            hlavicka
+        );
+
+        blok.appendChild(
+            pre
+        );
+
+        fragment.appendChild(
+            blok
+        );
+
+
+        posledni =
+            regex.lastIndex;
+
+    }
+
+
+    const zbytek =
+        text.slice(
+            posledni
+        );
+
+    if (zbytek) {
+
+        const span =
+            document.createElement(
+                "span"
+            );
+
+        span.textContent =
+            zbytek;
+
+        fragment.appendChild(
+            span
+        );
+
+    }
+
+
+    return fragment;
+
+}
+
+
+/* =========================================
+   ZOBRAZENÍ ZPRÁVY
+   ========================================= */
+
+function zobrazitZpravu(
+    autor,
+    text
+) {
+
+    welcome.style.display =
+        "none";
+
+    const inner =
+        messages.querySelector(
+            ".messages-inner"
+        );
+
+
+    const zprava =
+        document.createElement(
+            "div"
+        );
+
+    zprava.className =
+        "message " +
+        (
+            autor === "Ty"
+                ? "user"
+                : "ai"
+        );
+
+
+    const avatar =
+        document.createElement(
+            "div"
+        );
+
+    avatar.className =
+        "message-avatar";
+
+    avatar.textContent =
+        autor === "Ty"
+            ? "👤"
+            : "🦊";
+
+
+    const content =
+        document.createElement(
+            "div"
+        );
+
+    content.className =
+        "message-content";
+
+
+    const author =
+        document.createElement(
+            "div"
+        );
+
+    author.className =
+        "message-author";
+
+    author.textContent =
+        autor;
+
+
+    const textElement =
+        document.createElement(
+            "div"
+        );
+
+    textElement.className =
+        "message-text";
+
+
+    /*
+       AI může poslat kód.
+       Proto nepoužíváme innerHTML
+       přímo z odpovědi.
+    */
+
+    if (
+        autor === "AI"
+    ) {
+
+        textElement.appendChild(
+            vytvoritObsahZpravy(
+                text
+            )
+        );
+
+    } else {
+
+        textElement.textContent =
+            text;
+
+    }
+
+
+    content.appendChild(
+        author
+    );
+
+    content.appendChild(
+        textElement
+    );
+
+    zprava.appendChild(
+        avatar
+    );
+
+    zprava.appendChild(
+        content
+    );
+
+
+    inner.insertBefore(
+        zprava,
+        typing
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+/* =========================================
+   HISTORIE
+   ========================================= */
+
+function nacistHistorii() {
+
+    if (
+        !Array.isArray(
+            historie
+        )
+    ) {
+
+        historie = [];
+
+        return;
+
+    }
+
+
+    for (
+        const zprava of historie
+    ) {
+
+        if (
+            zprava &&
+            (
+                zprava.autor === "Ty" ||
+                zprava.autor === "AI"
+            ) &&
+            typeof zprava.text ===
+                "string"
+        ) {
+
+            zobrazitZpravu(
+                zprava.autor,
+                zprava.text
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   KONTEXT PRO AI
+   ========================================= */
+
+function vytvoritKontext(
+    novaZprava
+) {
+
+    const posledni =
+        historie.slice(-20);
+
+
+    let kontext =
+        "Jsi FoxAI, tedy AI chatbot " +
+        "v projektu TondaFox AI Project 1.\n\n" +
+
+        "Tvým úkolem je skutečně odpovídat " +
+        "na zprávy uživatele, nikoliv pouze " +
+        "opakovat obecné fráze.\n\n" +
+
+        "Pokud uživatel požádá o programovací " +
+        "kód, MUSÍŠ kód skutečně napsat.\n\n" +
+
+        "Programovací kód vždy zapisuj do " +
+        "trojitých zpětných apostrofů, " +
+        "například:\n" +
+
+        "```html\n" +
+
+        "<h1>Ahoj</h1>\n" +
+
+        "```\n\n" +
+
+        "Uveď také jazyk, například html, " +
+        "python, javascript nebo css.\n\n" +
+
+        "Pokud uživatel požádá o kompletní " +
+        "kód, napiš jej celý a ne pouze " +
+        "vysvětlení.\n\n" +
+
+        "Odpovídej česky, pokud uživatel " +
+        "píše česky.\n\n" +
+
+        "Historie konverzace:\n";
+
+
+    for (
+        const zprava of posledni
+    ) {
+
+        kontext +=
+            (
+                zprava.autor === "Ty"
+                    ? "Uživatel: "
+                    : "FoxAI: "
+            ) +
+            zprava.text +
+            "\n";
+
+    }
+
+
+    kontext +=
+        "\nNová zpráva uživatele:\n" +
+        novaZprava +
+        "\n\nFoxAI:";
+
+
+    return kontext;
+
+}
+
+
+/* =========================================
+   PUTER AI
+   ========================================= */
+
+async function odpovedPuter(
+    text
+) {
+
+    if (
+        typeof puter ===
+        "undefined"
+    ) {
+
+        throw new Error(
+            "Puter AI není dostupná. " +
+            "Zkontroluj připojení k internetu."
+        );
+
+    }
+
+
+    const prompt =
+        vytvoritKontext(
+            text
+        );
+
+
+    const odpoved =
+        await puter.ai.chat(
+            prompt,
+            {
+
+                model:
+                    puterModel.value,
+
+                temperature:
+                    Number(
+                        temperature.value
+                    ),
+
+                max_tokens:
+                    Number(
+                        maxTokens.value
+                    )
+
+            }
+        );
+
+
+    const vysledek =
+        ziskatTextZPuter(
+            odpoved
+        );
+
+
+    if (
+        !vysledek.trim()
+    ) {
+
+        console.log(
+            "Neznámá odpověď Puter AI:",
+            odpoved
+        );
+
+        throw new Error(
+            "Puter AI vrátila neznámý formát odpovědi."
+        );
+
+    }
+
+
+    return vysledek.trim();
+
+}
+
+
+/* =========================================
+   GOOGLE GEMINI
+   ========================================= */
+
+async function odpovedGoogle(
+    text
+) {
+
+    const key =
+        apiKey.value.trim();
+
+
+    if (!key) {
+
+        throw new Error(
+            "V Nastavení chybí Google Gemini API klíč."
+        );
+
+    }
+
+
+    const prompt =
+        vytvoritKontext(
+            text
+        );
+
+
+    const url =
+        "https://generativelanguage.googleapis.com/v1beta/models/" +
+        encodeURIComponent(
+            googleModel.value
+        ) +
+        ":generateContent?key=" +
+        encodeURIComponent(
+            key
+        );
+
+
+    const response =
+        await fetch(
+            url,
+            {
+
+                method:
+                    "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        contents: [
+
+                            {
+
+                                parts: [
+
+                                    {
+                                        text:
+                                            prompt
+                                    }
+
+                                ]
+
+                            }
+
+                        ],
+
+                        generationConfig: {
+
+                            temperature:
+                                Number(
+                                    temperature.value
+                                ),
+
+                            maxOutputTokens:
+                                Number(
+                                    maxTokens.value
+                                )
+
+                        }
+
+                    })
+
+            }
+        );
+
+
+    let data;
+
+
+    try {
+
+        data =
+            await response.json();
+
+    } catch {
+
+        throw new Error(
+            "Google Gemini vrátil neplatnou odpověď."
+        );
+
+    }
+
+
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+            data?.error?.message ||
+            (
+                "Google HTTP chyba " +
+                response.status
+            )
+        );
+
+    }
+
+
+    const vysledek =
+        data
+            ?.candidates
+            ?.[0]
+            ?.content
+            ?.parts
+            ?.map(
+                cast =>
+                    cast.text || ""
+            )
+            .join("")
+            .trim();
+
+
+    if (!vysledek) {
+
+        throw new Error(
+            "Google Gemini nevrátil žádný text."
+        );
+
+    }
+
+
+    return vysledek;
+
+}
+
+
+/* =========================================
+   VÝBĚR AI
+   ========================================= */
+
+async function odpovedAI(
+    text
+) {
+
+    if (
+        provider.value ===
+        "google"
+    ) {
+
+        return await odpovedGoogle(
+            text
+        );
+
+    }
+
+
+    return await odpovedPuter(
+        text
+    );
+
+}
+
+
+/* =========================================
+   ODESLÁNÍ
+   ========================================= */
+
+async function odeslatZpravu() {
+
+    if (
+        generuje
+    ) {
+
+        return;
+
+    }
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    generuje =
+        true;
+
+    send.disabled =
+        true;
+
+    input.disabled =
+        true;
+
+
+    zobrazitZpravu(
+        "Ty",
+        text
+    );
+
+
+    historie.push({
+
+        autor:
+            "Ty",
+
+        text:
+            text
+
+    });
+
+
+    ulozitHistorii();
+
+
+    input.value =
+        "";
+
+    input.style.height =
+        "auto";
+
+
+    typing.classList.add(
+        "visible"
+    );
+
+
+    try {
+
+        const odpoved =
+            await odpovedAI(
+                text
+            );
+
+
+        zobrazitZpravu(
+            "AI",
+            odpoved
+        );
+
+
+        historie.push({
+
+            autor:
+                "AI",
+
+            text:
+                odpoved
+
+        });
+
+
+        ulozitHistorii();
+
+
+    } catch (
+        chyba
+    ) {
+
+        console.error(
+            "FoxAI chyba:",
+            chyba
+        );
+
+
+        let textChyby;
+
+
+        if (
+            chyba &&
+            typeof chyba.message ===
+                "string"
+        ) {
+
+            textChyby =
+                chyba.message;
+
+        } else {
+
+            textChyby =
+                "Nastala neznámá chyba AI.";
+
+        }
+
+
+        zobrazitZpravu(
+            "AI",
+            "Chyba AI: " +
+            textChyby
+        );
+
+
+    } finally {
+
+        typing.classList.remove(
+            "visible"
+        );
+
+        generuje =
+            false;
+
+        send.disabled =
+            false;
+
+        input.disabled =
+            false;
+
+        input.focus();
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+    }
+
+}
+
+
+/* =========================================
+   ENTER
+   ========================================= */
+
+input.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            odeslatZpravu();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   AUTOMATICKÁ VÝŠKA INPUTU
+   ========================================= */
+
+input.addEventListener(
+    "input",
+    () => {
+
+        input.style.height =
+            "auto";
+
+        input.style.height =
+            Math.min(
+                input.scrollHeight,
+                180
+            ) +
+            "px";
+
+    }
+);
+
+
+/* =========================================
+   ODESLAT TLAČÍTKEM
+   ========================================= */
+
+send.addEventListener(
+    "click",
+    odeslatZpravu
+);
+
+
+/* =========================================
+   TÉMA
+   ========================================= */
+
+themeButton.addEventListener(
+    "click",
+    () => {
+
+        document.body.classList.toggle(
+            "dark"
+        );
+
+
+        themeButton.textContent =
+            document.body.classList.contains(
+                "dark"
+            )
+                ? "☀️"
+                : "🌙";
+
+
+        ulozitNastaveni();
+
+    }
+);
+
+
+/* =========================================
+   NOVÝ CHAT
+   ========================================= */
+
+newChat.addEventListener(
+    "click",
+    () => {
+
+        if (
+            historie.length > 0
+        ) {
+
+            if (
+                !confirm(
+                    "Opravdu chceš začít nový chat?"
+                )
+            ) {
+
+                return;
+
+            }
+
+        }
+
+
+        historie = [];
+
+
+        localStorage.removeItem(
+            "foxai_history"
+        );
+
+
+        location.reload();
+
+    }
+);
+
+
+/* =========================================
+   NASTAVENÍ
+   ========================================= */
+
+settingsButton.addEventListener(
+    "click",
+    () => {
+
+        settingsModal.classList.add(
+            "visible"
+        );
+
+    }
+);
+
+
+closeSettings.addEventListener(
+    "click",
+    () => {
+
+        settingsModal.classList.remove(
+            "visible"
+        );
+
+    }
+);
+
+
+settingsModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            settingsModal
+        ) {
+
+            settingsModal.classList.remove(
+                "visible"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   POSUVNÍKY
+   ========================================= */
+
+temperature.addEventListener(
+    "input",
+    () => {
+
+        temperatureValue.textContent =
+            temperature.value;
+
+    }
+);
+
+
+maxTokens.addEventListener(
+    "input",
+    () => {
+
+        maxTokensValue.textContent =
+            maxTokens.value;
+
+    }
+);
+
+
+/* =========================================
+   ULOŽIT
+   ========================================= */
+
+saveSettings.addEventListener(
+    "click",
+    () => {
+
+        ulozitNastaveni();
+
+        settingsModal.classList.remove(
+            "visible"
+        );
+
+    }
+);
+
+
+/* =========================================
+   SMAZAT DATA
+   ========================================= */
+
+deleteData.addEventListener(
+    "click",
+    () => {
+
+        if (
+            !confirm(
+                "Opravdu chceš smazat všechna data FoxAI?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        localStorage.removeItem(
+            "foxai_history"
+        );
+
+        localStorage.removeItem(
+            "foxai_settings"
+        );
+
+
+        location.reload();
+
+    }
+);
+
+
+/* =========================================
+   START
+   ========================================= */
+
+nacistHistorii();
+
+input.focus();
+
+</script>
+<script>
+
+/* =========================================
+   OCHRANA PROTI CHYBĚ [object Object]
+   ========================================= */
+
+window.addEventListener(
+    "error",
+    event => {
+
+        console.error(
+            "FoxAI JavaScript chyba:",
+            event.error || event.message
+        );
+
+    }
+);
+
+
+/* =========================================
+   KONTROLA PUTER
+   ========================================= */
+
+function zkontrolovatPuter() {
+
+    if (
+        provider.value !== "puter"
+    ) {
+
+        return true;
+
+    }
+
+    if (
+        typeof puter === "undefined"
+    ) {
+
+        console.warn(
+            "Puter AI zatím není načtená."
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* =========================================
+   KONTROLA API KLÍČE
+   ========================================= */
+
+function zkontrolovatAPI() {
+
+    if (
+        provider.value !== "google"
+    ) {
+
+        return true;
+
+    }
+
+    if (
+        !apiKey.value.trim()
+    ) {
+
+        alert(
+            "Nejdříve vlož Google Gemini API klíč v Nastavení."
+        );
+
+        settingsModal.classList.add(
+            "visible"
+        );
+
+        apiKey.focus();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* =========================================
+   PŘED ODESLÁNÍM ZKONTROLUJ AI
+   ========================================= */
+
+const puvodniOdeslatZpravu =
+    odeslatZpravu;
+
+
+/*
+   Nahradíme odesílání kontrolou.
+*/
+
+window.odeslatZpravu =
+    async function () {
+
+        if (
+            !zkontrolovatPuter()
+        ) {
+
+            if (
+                provider.value ===
+                "puter"
+            ) {
+
+                zobrazitZpravu(
+                    "AI",
+                    "Puter AI se ještě nenačetla. Zkontroluj připojení k internetu a zkus to znovu."
+                );
+
+            }
+
+            return;
+
+        }
+
+
+        if (
+            !zkontrolovatAPI()
+        ) {
+
+            return;
+
+        }
+
+
+        await puvodniOdeslatZpravu();
+
+    };
+
+
+/* =========================================
+   OPRAVA TLAČÍTKA ODESLAT
+   ========================================= */
+
+send.onclick =
+    window.odeslatZpravu;
+
+
+/* =========================================
+   OPRAVA ENTER
+   ========================================= */
+
+input.onkeydown =
+    function (event) {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            window.odeslatZpravu();
+
+        }
+
+    };
+
+
+/* =========================================
+   KONTROLA, ŽE JE FOXAI PŘIPRAVENÁ
+   ========================================= */
+
+console.log(
+    "🦊 FoxAI - TondaFox AI Project 1"
+);
+
+console.log(
+    "AI provider:",
+    provider.value
+);
+
+console.log(
+    "FoxAI je připravena."
+);
+
+
+/* =========================================
+   ZAVŘENÍ MODÁLNÍHO OKNA ESC
+   ========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            settingsModal.classList.remove(
+                "visible"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   ZABRÁNĚNÍ ODESLÁNÍ PRÁZDNÉ ZPRÁVY
+   ========================================= */
+
+input.addEventListener(
+    "input",
+    () => {
+
+        send.disabled =
+            !input.value.trim() ||
+            generuje;
+
+    }
+);
+
+
+/* =========================================
+   STARTOVNÍ STAV TLAČÍTKA
+   ========================================= */
+
+send.disabled =
+    !input.value.trim();
+
+
+</script>
+
+</body>
+
+</html>
