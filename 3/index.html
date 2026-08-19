@@ -1,0 +1,4730 @@
+ <!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               viewport-fit=cover">
+
+<meta name="theme-color"
+      content="#ffffff">
+
+<title>FoxAI — TondaFox AI Project 1</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f5f6f8;
+    color: #17181c;
+
+    overflow: hidden;
+
+    transition:
+        background .25s,
+        color .25s;
+}
+
+
+/* ==============================
+   HLAVNÍ APLIKACE
+   ============================== */
+
+.app {
+    width: 100%;
+    height: 100dvh;
+
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+}
+
+
+/* ==============================
+   HORNÍ LIŠTA
+   ============================== */
+
+.topbar {
+    height: 64px;
+    min-height: 64px;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+        0 16px;
+
+    background: rgba(
+        255,
+        255,
+        255,
+        .94
+    );
+
+    border-bottom:
+        1px solid #e3e5e9;
+
+    backdrop-filter:
+        blur(16px);
+
+    position: relative;
+    z-index: 10;
+}
+
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.logo {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #ff8a00;
+
+    font-size: 23px;
+
+    flex-shrink: 0;
+}
+
+
+.brand-text {
+    min-width: 0;
+}
+
+
+.brand-title {
+    font-size: 17px;
+    font-weight: 750;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.brand-subtitle {
+    font-size: 11px;
+
+    color: #777c86;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.top-actions {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.icon-button {
+    width: 40px;
+    height: 40px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background: transparent;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        background .18s,
+        transform .18s;
+}
+
+
+.icon-button:hover {
+    background: #eceef2;
+}
+
+
+.icon-button:active {
+    transform: scale(.94);
+}
+
+
+/* ==============================
+   CHAT
+   ============================== */
+
+.chat {
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scroll-behavior: smooth;
+}
+
+
+.chat-inner {
+    width: min(
+        900px,
+        100%
+    );
+
+    margin: 0 auto;
+
+    padding:
+        28px 18px
+        140px;
+}
+
+
+/* ==============================
+   UVÍTÁNÍ
+   ============================== */
+
+.welcome {
+    min-height:
+        calc(
+            100dvh - 220px
+        );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.welcome-box {
+    max-width: 650px;
+
+    padding: 30px 20px;
+}
+
+
+.welcome-logo {
+    width: 72px;
+    height: 72px;
+
+    margin:
+        0 auto 18px;
+
+    border-radius: 22px;
+
+    background: #ff8a00;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 40px;
+}
+
+
+.welcome h1 {
+    font-size:
+        clamp(
+            28px,
+            6vw,
+            42px
+        );
+
+    margin-bottom: 10px;
+}
+
+
+.welcome p {
+    color: #777c86;
+
+    line-height: 1.55;
+
+    font-size: 15px;
+}
+
+
+.welcome-badges {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 20px;
+}
+
+
+.badge {
+    padding:
+        7px 11px;
+
+    border-radius: 999px;
+
+    background: #e9ebef;
+
+    font-size: 12px;
+
+    color: #555a64;
+}
+
+
+/* ==============================
+   ZPRÁVY
+   ============================== */
+
+.message {
+    display: flex;
+
+    gap: 11px;
+
+    margin-bottom: 25px;
+
+    width: 100%;
+}
+
+
+.message.user {
+    flex-direction: row-reverse;
+}
+
+
+.avatar {
+    width: 36px;
+    height: 36px;
+
+    flex:
+        0 0 36px;
+
+    border-radius: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #e9ebef;
+
+    font-size: 17px;
+}
+
+
+.message.ai .avatar {
+    background: #ff8a00;
+}
+
+
+.message-content {
+    max-width:
+        min(
+            82%,
+            720px
+        );
+
+    min-width: 0;
+}
+
+
+.author {
+    font-size: 12px;
+
+    font-weight: 700;
+
+    margin-bottom: 5px;
+
+    color: #686d77;
+}
+
+
+.message.user .author {
+    text-align: right;
+}
+
+
+.bubble {
+    line-height: 1.58;
+
+    font-size: 15px;
+
+    overflow-wrap:
+        anywhere;
+}
+
+
+.message.user .bubble {
+    padding:
+        10px 14px;
+
+    border-radius:
+        17px 17px 4px 17px;
+
+    background: #e5e7eb;
+}
+
+
+/* ==============================
+   KÓDOVÝ BLOK
+   ============================== */
+
+.code-card {
+    margin:
+        14px 0;
+
+    border:
+        1px solid #2c3038;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    background: #15171b;
+
+    color: #f1f3f5;
+
+    box-shadow:
+        0 4px 18px
+        rgba(0,0,0,.12);
+}
+
+
+.code-header {
+    height: 42px;
+
+    padding:
+        0 11px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: #202329;
+
+    border-bottom:
+        1px solid #30343c;
+}
+
+
+.code-language {
+    font-size: 12px;
+
+    font-weight: 750;
+
+    color: #cdd1d8;
+}
+
+
+.copy-code {
+    border: 0;
+
+    border-radius: 8px;
+
+    padding:
+        6px 9px;
+
+    background: #30343c;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 12px;
+}
+
+
+.copy-code:hover {
+    background: #3b404a;
+}
+
+
+.code-content {
+    margin: 0;
+
+    padding:
+        15px;
+
+    overflow-x: auto;
+
+    font-family:
+        "Consolas",
+        "Cascadia Code",
+        monospace;
+
+    font-size: 13px;
+
+    line-height: 1.55;
+
+    white-space: pre;
+
+    tab-size: 4;
+}
+
+
+/* ==============================
+   TYPING
+   ============================== */
+
+.typing {
+    display: none;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin:
+        0 0 18px 47px;
+}
+
+
+.typing.visible {
+    display: flex;
+}
+
+
+.typing span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #8b9099;
+
+    animation:
+        typing .9s
+        infinite;
+}
+
+
+.typing span:nth-child(2) {
+    animation-delay:
+        .15s;
+}
+
+
+.typing span:nth-child(3) {
+    animation-delay:
+        .30s;
+}
+
+
+@keyframes typing {
+
+    0%,
+    60%,
+    100% {
+        transform:
+            translateY(0);
+
+        opacity: .45;
+    }
+
+    30% {
+        transform:
+            translateY(-5px);
+
+        opacity: 1;
+    }
+
+}
+
+
+/* ==============================
+   VSTUP
+   ============================== */
+
+.input-area {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    padding:
+        12px 14px
+        calc(
+            12px +
+            env(safe-area-inset-bottom)
+        );
+
+    background:
+        linear-gradient(
+            transparent,
+            #f5f6f8 25%
+        );
+
+    z-index: 5;
+}
+
+
+.input-box {
+    width:
+        min(
+            850px,
+            100%
+        );
+
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 8px;
+
+    padding: 8px;
+
+    background: white;
+
+    border:
+        1px solid #dfe2e7;
+
+    border-radius: 17px;
+
+    box-shadow:
+        0 7px 28px
+        rgba(0,0,0,.10);
+}
+
+
+#input {
+    flex: 1;
+
+    min-width: 0;
+
+    max-height: 150px;
+
+    min-height: 40px;
+
+    resize: none;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    padding:
+        9px 8px;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    line-height: 1.45;
+}
+
+
+.send-button {
+    width: 40px;
+    height: 40px;
+
+    flex:
+        0 0 40px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background: #ff8a00;
+
+    color: white;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s,
+        opacity .18s;
+}
+
+
+.send-button:hover {
+    transform:
+        translateY(-1px);
+}
+
+
+.send-button:disabled {
+    opacity: .4;
+
+    cursor: default;
+
+    transform: none;
+}
+
+
+/* ==============================
+   NASTAVENÍ
+   ============================== */
+
+.settings-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    background:
+        rgba(0,0,0,.35);
+
+    backdrop-filter:
+        blur(5px);
+
+    display: none;
+
+    align-items: flex-end;
+
+    justify-content: center;
+}
+
+
+.settings-overlay.open {
+    display: flex;
+}
+
+
+.settings {
+    width:
+        min(
+            600px,
+            100%
+        );
+
+    max-height:
+        min(
+            90dvh,
+            760px
+        );
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius:
+        22px 22px 0 0;
+
+    padding:
+        20px;
+
+    box-shadow:
+        0 -10px 40px
+        rgba(0,0,0,.18);
+}
+
+
+.settings-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+
+.settings-header h2 {
+    font-size: 21px;
+}
+
+
+.close-settings {
+    width: 38px;
+    height: 38px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: #eceef2;
+
+    font-size: 23px;
+
+    cursor: pointer;
+}
+
+
+.setting {
+    margin-bottom: 18px;
+}
+
+
+.setting label {
+    display: block;
+
+    font-weight: 700;
+
+    font-size: 13px;
+
+    margin-bottom: 7px;
+}
+
+
+.setting select,
+.setting input[type="text"] {
+    width: 100%;
+
+    height: 44px;
+
+    border:
+        1px solid #d9dce2;
+
+    border-radius: 10px;
+
+    padding:
+        0 11px;
+
+    background: white;
+
+    color: #17181c;
+
+    font-family: inherit;
+
+    outline: none;
+}
+
+
+.setting input[type="range"] {
+    width: 100%;
+}
+
+
+.range-line {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.range-line input {
+    flex: 1;
+}
+
+
+.range-value {
+    min-width: 42px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: #666b74;
+}
+
+
+.setting-description {
+    margin-top: 6px;
+
+    color: #777c86;
+
+    font-size: 12px;
+
+    line-height: 1.45;
+}
+
+
+.settings-actions {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 22px;
+}
+
+
+.settings-actions button {
+    flex: 1;
+
+    min-height: 44px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    font-family: inherit;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.save-settings {
+    background: #ff8a00;
+
+    color: white;
+}
+
+
+.delete-data {
+    background: #eceef2;
+
+    color: #292c32;
+}
+
+
+/* ==============================
+   DARK MODE
+   ============================== */
+
+body.dark {
+    background: #101114;
+
+    color: #f2f3f5;
+}
+
+
+body.dark .topbar {
+    background:
+        rgba(20,21,25,.94);
+
+    border-color: #292c32;
+}
+
+
+body.dark .brand-subtitle,
+body.dark .author,
+body.dark .welcome p,
+body.dark .setting-description {
+    color: #999fa9;
+}
+
+
+body.dark .icon-button:hover {
+    background: #282b31;
+}
+
+
+body.dark .badge {
+    background: #25282e;
+
+    color: #bfc3ca;
+}
+
+
+body.dark .avatar {
+    background: #292c32;
+}
+
+
+body.dark .message.user .bubble {
+    background: #292c32;
+}
+
+
+body.dark .input-area {
+    background:
+        linear-gradient(
+            transparent,
+            #101114 25%
+        );
+}
+
+
+body.dark .input-box {
+    background: #1c1e22;
+
+    border-color: #30343b;
+}
+
+
+body.dark #input {
+    color: #f2f3f5;
+}
+
+
+body.dark .settings {
+    background: #191b1f;
+}
+
+
+body.dark .setting select,
+body.dark .setting input[type="text"] {
+    background: #24272c;
+
+    border-color: #363a42;
+
+    color: #f2f3f5;
+}
+
+
+body.dark .close-settings,
+body.dark .delete-data {
+    background: #2a2d33;
+
+    color: #f2f3f5;
+}
+
+
+/* ==============================
+   MOBIL
+   ============================== */
+
+@media (
+    max-width: 600px
+) {
+
+    .topbar {
+        height: 58px;
+        min-height: 58px;
+
+        padding:
+            0 10px;
+    }
+
+
+    .logo {
+        width: 36px;
+        height: 36px;
+
+        border-radius: 10px;
+
+        font-size: 20px;
+    }
+
+
+    .brand-title {
+        font-size: 15px;
+    }
+
+
+    .brand-subtitle {
+        display: none;
+    }
+
+
+    .top-actions {
+        gap: 2px;
+    }
+
+
+    .icon-button {
+        width: 37px;
+        height: 37px;
+    }
+
+
+    .chat-inner {
+        padding:
+            20px 12px
+            125px;
+    }
+
+
+    .message-content {
+        max-width: 86%;
+    }
+
+
+    .bubble {
+        font-size: 14px;
+    }
+
+
+    .avatar {
+        width: 33px;
+        height: 33px;
+
+        flex-basis: 33px;
+    }
+
+
+    .typing {
+        margin-left: 44px;
+    }
+
+
+    .input-area {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+
+    .input-box {
+        border-radius: 15px;
+    }
+
+
+    .settings {
+        padding:
+            17px;
+
+        border-radius:
+            19px 19px 0 0;
+    }
+
+}
+
+
+/* ==============================
+   EXTRA MALÉ DISPLEJE
+   ============================== */
+
+@media (
+    max-width: 380px
+) {
+
+    .brand-title {
+        max-width: 145px;
+    }
+
+
+    .message-content {
+        max-width: 82%;
+    }
+
+
+    .welcome-box {
+        padding:
+            20px 10px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =================================
+         HORNÍ LIŠTA
+         ================================= -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="logo">
+                🦊
+            </div>
+
+            <div class="brand-text">
+
+                <div class="brand-title">
+                    FoxAI
+                </div>
+
+                <div class="brand-subtitle">
+                    TondaFox AI Project 1
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="top-actions">
+
+            <button
+                class="icon-button"
+                id="newChat"
+                title="Nový chat"
+                aria-label="Nový chat"
+            >
+                ＋
+            </button>
+
+
+            <button
+                class="icon-button"
+                id="themeButton"
+                title="Přepnout motiv"
+                aria-label="Přepnout motiv"
+            >
+                🌙
+            </button>
+
+
+            <button
+                class="icon-button"
+                id="settingsButton"
+                title="Nastavení"
+                aria-label="Nastavení"
+            >
+                ⚙️
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =================================
+         CHAT
+         ================================= -->
+
+    <main
+        class="chat"
+        id="chat"
+    >
+
+        <div class="chat-inner">
+
+
+            <section
+                class="welcome"
+                id="welcome"
+            >
+
+                <div class="welcome-box">
+
+                    <div class="welcome-logo">
+                        🦊
+                    </div>
+
+                    <h1>
+                        FoxAI
+                    </h1>
+
+                    <p>
+                        TondaFox AI Project 1
+                    </p>
+
+                    <p style="margin-top:8px">
+                        AI asistent pro chat,
+                        programování a tvorbu kódu.
+                    </p>
+
+
+                    <div class="welcome-badges">
+
+                        <span class="badge">
+                            💻 Programování
+                        </span>
+
+                        <span class="badge">
+                            📋 Kopírování kódu
+                        </span>
+
+                        <span class="badge">
+                            📱 Android
+                        </span>
+
+                        <span class="badge">
+                            🔒 Bez API
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- TYPING -->
+
+            <div
+                class="typing"
+                id="typing"
+            >
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =================================
+         VSTUP
+         ================================= -->
+
+    <div class="input-area">
+
+        <div class="input-box">
+
+            <textarea
+                id="input"
+                rows="1"
+                placeholder="Napiš FoxAI..."
+                autocomplete="off"
+                spellcheck="true"
+            ></textarea>
+
+
+            <button
+                class="send-button"
+                id="send"
+                disabled
+                aria-label="Odeslat"
+            >
+                ➤
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================
+         NASTAVENÍ
+         ================================= -->
+
+    <div
+        class="settings-overlay"
+        id="settingsOverlay"
+    >
+
+        <div class="settings">
+
+            <div class="settings-header">
+
+                <h2>
+                    ⚙️ Nastavení FoxAI
+                </h2>
+
+                <button
+                    class="close-settings"
+                    id="closeSettings"
+                    aria-label="Zavřít"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- AI REŽIM -->
+
+            <div class="setting">
+
+                <label for="aiMode">
+                    🤖 Režim AI
+                </label>
+
+                <select id="aiMode">
+
+                    <option value="basic">
+                        🟢 FoxAI Basic
+                    </option>
+
+                    <option value="local">
+                        🔵 FoxAI Local Model
+                    </option>
+
+                </select>
+
+
+                <div class="setting-description">
+
+                    <b>FoxAI Basic</b> používá
+                    vlastní AI logiku přímo v aplikaci.
+
+                    <br><br>
+
+                    <b>FoxAI Local Model</b> je připravena
+                    pro skutečný AI model běžící přímo
+                    v prohlížeči — bez API a přihlášení.
+
+                </div>
+
+            </div>
+
+
+            <!-- MODEL -->
+
+            <div
+                class="setting"
+                id="modelSetting"
+            >
+
+                <label for="localModel">
+                    🧠 Lokální model
+                </label>
+
+                <select id="localModel">
+
+                    <option value="small">
+                        Small — rychlejší
+                    </option>
+
+                    <option value="medium">
+                        Medium — vyvážený
+                    </option>
+
+                </select>
+
+
+                <div class="setting-description">
+
+                    Tato možnost bude použita,
+                    až bude k FoxAI připojen
+                    skutečný model běžící
+                    přímo v prohlížeči.
+
+                </div>
+
+            </div>
+
+
+            <!-- TEPLOTA -->
+
+            <div class="setting">
+
+                <label for="temperature">
+                    🌡️ Kreativita
+                </label>
+
+                <div class="range-line">
+
+                    <input
+                        id="temperature"
+                        type="range"
+                        min="0"
+                        max="1.5"
+                        step="0.1"
+                        value="0.7"
+                    >
+
+                    <span
+                        class="range-value"
+                        id="temperatureValue"
+                    >
+                        0.7
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- DÉLKA -->
+
+            <div class="setting">
+
+                <label for="maxTokens">
+                    📝 Délka odpovědi
+                </label>
+
+                <div class="range-line">
+
+                    <input
+                        id="maxTokens"
+                        type="range"
+                        min="100"
+                        max="4000"
+                        step="100"
+                        value="800"
+                    >
+
+                    <span
+                        class="range-value"
+                        id="maxTokensValue"
+                    >
+                        800
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- AKCE -->
+
+            <div class="settings-actions">
+
+                <button
+                    class="save-settings"
+                    id="saveSettings"
+                >
+                    ✓ Uložit
+                </button>
+
+                <button
+                    class="delete-data"
+                    id="deleteData"
+                >
+                    🗑️ Smazat data
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+/* =========================================
+   FOXAI V4 — ČÁST 2/4
+   CHAT + BASIC AI + HISTORIE + NASTAVENÍ
+   ========================================= */
+
+
+/* =========================================
+   ELEMENTY
+   ========================================= */
+
+const chat =
+    document.getElementById("chat");
+
+const chatInner =
+    document.querySelector(".chat-inner");
+
+const input =
+    document.getElementById("input");
+
+const send =
+    document.getElementById("send");
+
+const welcome =
+    document.getElementById("welcome");
+
+const typing =
+    document.getElementById("typing");
+
+const newChat =
+    document.getElementById("newChat");
+
+const themeButton =
+    document.getElementById("themeButton");
+
+const settingsButton =
+    document.getElementById("settingsButton");
+
+const settingsOverlay =
+    document.getElementById("settingsOverlay");
+
+const closeSettings =
+    document.getElementById("closeSettings");
+
+const saveSettings =
+    document.getElementById("saveSettings");
+
+const deleteData =
+    document.getElementById("deleteData");
+
+const aiMode =
+    document.getElementById("aiMode");
+
+const localModel =
+    document.getElementById("localModel");
+
+const temperature =
+    document.getElementById("temperature");
+
+const temperatureValue =
+    document.getElementById("temperatureValue");
+
+const maxTokens =
+    document.getElementById("maxTokens");
+
+const maxTokensValue =
+    document.getElementById("maxTokensValue");
+
+
+/* =========================================
+   PROMĚNNÉ
+   ========================================= */
+
+let messages = [];
+
+let generating = false;
+
+let settings = {
+
+    mode: "basic",
+
+    localModel: "small",
+
+    temperature: 0.7,
+
+    maxTokens: 800,
+
+    theme: "light"
+
+};
+
+
+/* =========================================
+   LOCALSTORAGE
+   ========================================= */
+
+function saveSettingsData() {
+
+    try {
+
+        localStorage.setItem(
+            "foxai-settings",
+            JSON.stringify(settings)
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Nastavení se nepodařilo uložit.",
+            error
+        );
+
+    }
+
+}
+
+
+function loadSettingsData() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                "foxai-settings"
+            );
+
+        if (!saved) {
+
+            return;
+
+        }
+
+        const data =
+            JSON.parse(saved);
+
+        if (
+            data &&
+            typeof data === "object"
+        ) {
+
+            settings = {
+                ...settings,
+                ...data
+            };
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Nastavení se nepodařilo načíst.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   HISTORIE
+   ========================================= */
+
+function saveHistory() {
+
+    try {
+
+        localStorage.setItem(
+            "foxai-history",
+            JSON.stringify(messages)
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Historii se nepodařilo uložit.",
+            error
+        );
+
+    }
+
+}
+
+
+function loadHistory() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                "foxai-history"
+            );
+
+        if (!saved) {
+
+            return;
+
+        }
+
+        const data =
+            JSON.parse(saved);
+
+        if (
+            Array.isArray(data)
+        ) {
+
+            messages = data;
+
+            renderHistory();
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Historii se nepodařilo načíst.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   VYKRESLENÍ HISTORIE
+   ========================================= */
+
+function renderHistory() {
+
+    const oldMessages =
+        chatInner.querySelectorAll(
+            ".message"
+        );
+
+    oldMessages.forEach(
+        element => element.remove()
+    );
+
+
+    if (messages.length > 0) {
+
+        welcome.style.display =
+            "none";
+
+    } else {
+
+        welcome.style.display =
+            "";
+
+    }
+
+
+    messages.forEach(
+        message => {
+
+            renderMessage(
+                message.role,
+                message.text,
+                false
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   ÚNIK HTML
+   ========================================= */
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================
+   FORMÁTOVÁNÍ TEXTU
+   ========================================= */
+
+function formatText(text) {
+
+    let result =
+        escapeHTML(text);
+
+
+    /*
+       Kódové bloky:
+       ```html
+       ...
+       ```
+    */
+
+    const codeRegex =
+        /```([a-zA-Z0-9_+#.-]*)\n?([\s\S]*?)```/g;
+
+
+    result =
+        result.replace(
+            codeRegex,
+            function(
+                match,
+                language,
+                code
+            ) {
+
+                const lang =
+                    language ||
+                    "code";
+
+
+                const cleanCode =
+                    code
+                        .replace(
+                            /^\n/,
+                            ""
+                        )
+                        .replace(
+                            /\n$/,
+                            ""
+                        );
+
+
+                const safeLanguage =
+                    escapeHTML(
+                        lang
+                    );
+
+
+                const safeCode =
+                    escapeHTML(
+                        cleanCode
+                    );
+
+
+                return `
+
+                    <div class="code-card">
+
+                        <div class="code-header">
+
+                            <span
+                                class="code-language"
+                            >
+                                ${safeLanguage}
+                            </span>
+
+                            <button
+                                class="copy-code"
+                                type="button"
+                                data-code="${encodeURIComponent(cleanCode)}"
+                            >
+                                📋 Kopírovat
+                            </button>
+
+                        </div>
+
+                        <pre class="code-content"><code>${safeCode}</code></pre>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+    /*
+       Jednoduché zvýraznění tučného textu.
+    */
+
+    result =
+        result.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+
+    /*
+       Řádky začínající *.
+    */
+
+    result =
+        result.replace(
+            /^\* (.+)$/gm,
+            "• $1"
+        );
+
+
+    /*
+       Nové řádky.
+       Neprovádíme je uvnitř <pre>.
+    */
+
+    const parts =
+        result.split(
+            /(<div class="code-card">[\s\S]*?<\/div>\s*<\/div>)/g
+        );
+
+
+    result =
+        parts.map(
+            part => {
+
+                if (
+                    part.includes(
+                        'class="code-card"'
+                    )
+                ) {
+
+                    return part;
+
+                }
+
+                return part.replace(
+                    /\n/g,
+                    "<br>"
+                );
+
+            }
+        ).join("");
+
+
+    return result;
+
+}
+
+
+/* =========================================
+   VYKRESLENÍ ZPRÁVY
+   ========================================= */
+
+function renderMessage(
+    role,
+    text,
+    addToHistory = true
+) {
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+    message.className =
+        "message " +
+        (
+            role === "user"
+                ? "user"
+                : "ai"
+        );
+
+
+    const avatar =
+        document.createElement(
+            "div"
+        );
+
+    avatar.className =
+        "avatar";
+
+    avatar.textContent =
+        role === "user"
+            ? "👤"
+            : "✨";
+
+
+    const content =
+        document.createElement(
+            "div"
+        );
+
+    content.className =
+        "message-content";
+
+
+    const author =
+        document.createElement(
+            "div"
+        );
+
+    author.className =
+        "author";
+
+    author.textContent =
+        role === "user"
+            ? "Ty"
+            : "AI";
+
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+    bubble.className =
+        "bubble";
+
+    bubble.innerHTML =
+        formatText(text);
+
+
+    content.appendChild(
+        author
+    );
+
+    content.appendChild(
+        bubble
+    );
+
+
+    message.appendChild(
+        avatar
+    );
+
+    message.appendChild(
+        content
+    );
+
+
+    chatInner.insertBefore(
+        message,
+        typing
+    );
+
+
+    if (addToHistory) {
+
+        messages.push({
+
+            role:
+                role,
+
+            text:
+                text,
+
+            time:
+                Date.now()
+
+        });
+
+        saveHistory();
+
+    }
+
+
+    welcome.style.display =
+        "none";
+
+
+    scrollChat();
+
+}
+
+
+/* =========================================
+   SCROLL CHATU
+   ========================================= */
+
+function scrollChat() {
+
+    setTimeout(
+        () => {
+
+            chat.scrollTop =
+                chat.scrollHeight;
+
+        },
+        20
+    );
+
+}
+
+
+/* =========================================
+   AUTO VÝŠKA TEXTAREA
+   ========================================= */
+
+function resizeInput() {
+
+    input.style.height =
+        "auto";
+
+    input.style.height =
+        Math.min(
+            input.scrollHeight,
+            150
+        ) + "px";
+
+}
+
+
+input.addEventListener(
+    "input",
+    () => {
+
+        resizeInput();
+
+        send.disabled =
+            generating ||
+            !input.value.trim();
+
+    }
+);
+
+
+/* =========================================
+   ENTER
+   ========================================= */
+
+input.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   TYPING
+   ========================================= */
+
+function showTyping() {
+
+    typing.classList.add(
+        "visible"
+    );
+
+    scrollChat();
+
+}
+
+
+function hideTyping() {
+
+    typing.classList.remove(
+        "visible"
+    );
+
+}
+
+
+/* =========================================
+   BASIC AI
+   ========================================= */
+
+function basicAI(question) {
+
+    const text =
+        question
+            .toLowerCase()
+            .trim();
+
+
+    /*
+       Pozdravy
+    */
+
+    if (
+        text === "ahoj" ||
+        text === "čau" ||
+        text === "cus" ||
+        text === "čus"
+    ) {
+
+        return `
+Ahoj! 🦊
+
+Jsem FoxAI — TondaFox AI Project 1.
+
+Můžu ti pomáhat například s programováním, HTML, Pythonem a dalšími věcmi.
+
+Co dnes vytvoříme?
+`;
+
+    }
+
+
+    if (
+        text.includes(
+            "jak se jmenuješ"
+        ) ||
+        text.includes(
+            "jak se jmenujes"
+        )
+    ) {
+
+        return `
+Jmenuji se **FoxAI**. 🦊
+
+Celý název projektu je:
+
+**FoxAI — TondaFox AI Project 1**
+
+Jsem vytvořená jako webová AI aplikace bez nutnosti API klíče v režimu FoxAI Basic.
+`;
+
+    }
+
+
+    /*
+       Kódování
+    */
+
+    if (
+        text.includes(
+            "html"
+        ) &&
+        (
+            text.includes(
+                "kód"
+            ) ||
+            text.includes(
+                "kod"
+            ) ||
+            text.includes(
+                "vytvoř"
+            ) ||
+            text.includes(
+                "vytvor"
+            )
+        )
+    ) {
+
+        return `
+Jasně! 🦊
+
+Tady je jednoduchý HTML příklad:
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Moje stránka</title>
+</head>
+<body>
+
+    <h1>Ahoj!</h1>
+    <p>Vytvořeno pomocí FoxAI.</p>
+
+</body>
+</html>
+\`\`\`
+
+Kód můžeš zkopírovat tlačítkem **📋 Kopírovat**.
+`;
+
+    }
+
+
+    if (
+        text.includes(
+            "python"
+        ) &&
+        (
+            text.includes(
+                "kód"
+            ) ||
+            text.includes(
+                "kod"
+            ) ||
+            text.includes(
+                "program"
+            )
+        )
+    ) {
+
+        return `
+Jasně! 🐍
+
+Tady je jednoduchý Python program:
+
+\`\`\`python
+jmeno = input("Jak se jmenuješ? ")
+
+print(
+    "Ahoj, " +
+    jmeno +
+    "!"
+)
+\`\`\`
+
+Kód můžeš okamžitě zkopírovat.
+`;
+
+    }
+
+
+    /*
+       Programování
+    */
+
+    if (
+        text.includes(
+            "umíš programovat"
+        ) ||
+        text.includes(
+            "umíš psát kód"
+        ) ||
+        text.includes(
+            "umíš psat kod"
+        )
+    ) {
+
+        return `
+Ano. 💻
+
+FoxAI Basic obsahuje základní znalosti programování a umí připravovat například HTML a Python.
+
+Pro mnohem pokročilejší generování kódu je určen režim **FoxAI Local Model**, do kterého později připojíme skutečný lokální AI model.
+`;
+
+    }
+
+
+    /*
+       Co je FoxAI
+    */
+
+    if (
+        text.includes(
+            "co umíš"
+        ) ||
+        text.includes(
+            "co umis"
+        )
+    ) {
+
+        return `
+Jsem FoxAI. 🦊
+
+V režimu **Basic** zvládám například:
+
+• jednoduché otázky
+• základní programování
+• HTML
+• Python
+• tvorbu jednoduchých kódů
+• vysvětlování základních pojmů
+
+V režimu **Local Model** bude možné používat skutečný AI model přímo v prohlížeči.
+`;
+
+    }
+
+
+    /*
+       Pomoc
+    */
+
+    if (
+        text ===
+        "help" ||
+        text ===
+        "/help" ||
+        text.includes(
+            "pomoc"
+        )
+    ) {
+
+        return `
+🦊 **FoxAI Basic**
+
+Můžeš se mě zeptat například:
+
+• Ahoj
+• Co umíš?
+• Umíš psát kód?
+• Vytvoř HTML kód
+• Vytvoř Python program
+• Co je JavaScript?
+
+Později bude režim Local Model poskytovat mnohem pokročilejší odpovědi.
+`;
+
+    }
+
+
+    /*
+       Výchozí odpověď
+    */
+
+    return `
+Rozumím, že se ptáš:
+
+**${question}**
+
+🦊 Aktuálně používáš **FoxAI Basic**.
+
+Tento režim funguje přímo v této stránce a nepotřebuje API, účet ani přihlášení.
+
+Pro skutečné generování odpovědí pomocí AI modelu použijeme druhý režim **FoxAI Local Model**, který doplníme v dalších částech.
+`;
+
+}
+
+
+/* =========================================
+   ODESLÁNÍ ZPRÁVY
+   ========================================= */
+
+async function sendMessage() {
+
+    if (
+        generating
+    ) {
+
+        return;
+
+    }
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    generating =
+        true;
+
+    send.disabled =
+        true;
+
+
+    input.value = "";
+
+    resizeInput();
+
+
+    renderMessage(
+        "user",
+        text
+    );
+
+
+    showTyping();
+
+
+    try {
+
+        let answer;
+
+
+        if (
+            settings.mode ===
+            "basic"
+        ) {
+
+            /*
+               Malá pauza, aby odpověď
+               působila přirozeně.
+            */
+
+            await wait(
+                350
+            );
+
+
+            answer =
+                basicAI(
+                    text
+                );
+
+        } else {
+
+            /*
+               Local Model zatím připravujeme.
+               Skutečné načtení modelu bude
+               doplněno v části 4/4.
+            */
+
+            await wait(
+                500
+            );
+
+
+            answer = `
+🔵 **FoxAI Local Model**
+
+Režim Local Model je vybraný, ale skutečný AI model ještě není načten.
+
+V další části FoxAI připravíme jeho načítání tak, aby mohl běžet přímo v prohlížeči bez API klíče a bez přihlášení.
+`;
+
+        }
+
+
+        hideTyping();
+
+
+        renderMessage(
+            "ai",
+            answer
+        );
+
+
+    } catch (error) {
+
+        hideTyping();
+
+
+        renderMessage(
+            "ai",
+            "❌ Chyba FoxAI: " +
+            String(error)
+        );
+
+
+    } finally {
+
+        generating =
+            false;
+
+        send.disabled =
+            !input.value.trim();
+
+        input.focus();
+
+    }
+
+}
+
+
+/* =========================================
+   ČEKÁNÍ
+   ========================================= */
+
+function wait(
+    milliseconds
+) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                milliseconds
+            )
+    );
+
+}
+
+
+send.addEventListener(
+    "click",
+    sendMessage
+);
+
+
+/* =========================================
+   NOVÝ CHAT
+   ========================================= */
+
+newChat.addEventListener(
+    "click",
+    () => {
+
+        if (
+            messages.length > 0
+        ) {
+
+            const confirmed =
+                confirm(
+                    "Opravdu chceš začít nový chat?"
+                );
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+        }
+
+
+        messages = [];
+
+        localStorage.removeItem(
+            "foxai-history"
+        );
+
+
+        const oldMessages =
+            chatInner.querySelectorAll(
+                ".message"
+            );
+
+
+        oldMessages.forEach(
+            element =>
+                element.remove()
+        );
+
+
+        welcome.style.display =
+            "";
+
+
+        input.value = "";
+
+        resizeInput();
+
+        send.disabled = true;
+
+        input.focus();
+
+    }
+);
+
+
+/* =========================================
+   TÉMA
+   ========================================= */
+
+function applyTheme() {
+
+    if (
+        settings.theme ===
+        "dark"
+    ) {
+
+        document.body.classList.add(
+            "dark"
+        );
+
+        themeButton.textContent =
+            "☀️";
+
+    } else {
+
+        document.body.classList.remove(
+            "dark"
+        );
+
+        themeButton.textContent =
+            "🌙";
+
+    }
+
+}
+
+
+themeButton.addEventListener(
+    "click",
+    () => {
+
+        settings.theme =
+            settings.theme ===
+            "dark"
+                ? "light"
+                : "dark";
+
+
+        applyTheme();
+
+        saveSettingsData();
+
+    }
+);
+
+
+/* =========================================
+   NASTAVENÍ
+   ========================================= */
+
+function openSettings() {
+
+    settingsOverlay.classList.add(
+        "open"
+    );
+
+}
+
+
+function closeSettingsWindow() {
+
+    settingsOverlay.classList.remove(
+        "open"
+    );
+
+}
+
+
+settingsButton.addEventListener(
+    "click",
+    openSettings
+);
+
+
+closeSettings.addEventListener(
+    "click",
+    closeSettingsWindow
+);
+
+
+settingsOverlay.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            settingsOverlay
+        ) {
+
+            closeSettingsWindow();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   REŽIM AI
+   ========================================= */
+
+function updateModeUI() {
+
+    settings.mode =
+        aiMode.value;
+
+
+    /*
+       Local model není v této části
+       ještě skutečně načtený.
+    */
+
+    if (
+        aiMode.value ===
+        "local"
+    ) {
+
+        localModel.disabled =
+            false;
+
+    } else {
+
+        localModel.disabled =
+            true;
+
+    }
+
+}
+
+
+aiMode.addEventListener(
+    "change",
+    updateModeUI
+);
+
+
+localModel.addEventListener(
+    "change",
+    () => {
+
+        settings.localModel =
+            localModel.value;
+
+    }
+);
+
+
+/* =========================================
+   TEPLOTA
+   ========================================= */
+
+temperature.addEventListener(
+    "input",
+    () => {
+
+        temperatureValue.textContent =
+            temperature.value;
+
+        settings.temperature =
+            Number(
+                temperature.value
+            );
+
+    }
+);
+
+
+/* =========================================
+   MAX TOKENS
+   ========================================= */
+
+maxTokens.addEventListener(
+    "input",
+    () => {
+
+        maxTokensValue.textContent =
+            maxTokens.value;
+
+        settings.maxTokens =
+            Number(
+                maxTokens.value
+            );
+
+    }
+);
+
+
+/* =========================================
+   ULOŽENÍ NASTAVENÍ
+   ========================================= */
+
+saveSettings.addEventListener(
+    "click",
+    () => {
+
+        settings.mode =
+            aiMode.value;
+
+        settings.localModel =
+            localModel.value;
+
+        settings.temperature =
+            Number(
+                temperature.value
+            );
+
+        settings.maxTokens =
+            Number(
+                maxTokens.value
+            );
+
+
+        saveSettingsData();
+
+        closeSettingsWindow();
+
+    }
+);
+
+
+/* =========================================
+   SMAZÁNÍ DAT
+   ========================================= */
+
+deleteData.addEventListener(
+    "click",
+    () => {
+
+        const confirmed =
+            confirm(
+                "Opravdu chceš smazat historii a uložená nastavení FoxAI?"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+       }
+
+
+        localStorage.removeItem(
+            "foxai-history"
+        );
+
+        localStorage.removeItem(
+            "foxai-settings"
+        );
+
+
+        messages = [];
+
+
+        settings = {
+
+            mode: "basic",
+
+            localModel: "small",
+
+            temperature: 0.7,
+
+            maxTokens: 800,
+
+            theme: "light"
+
+        };
+
+
+        aiMode.value =
+            "basic";
+
+        localModel.value =
+            "small";
+
+        temperature.value =
+            "0.7";
+
+        temperatureValue.textContent =
+            "0.7";
+
+        maxTokens.value =
+            "800";
+
+        maxTokensValue.textContent =
+            "800";
+
+
+        applyTheme();
+
+        updateModeUI();
+
+
+        const oldMessages =
+            chatInner.querySelectorAll(
+                ".message"
+            );
+
+
+        oldMessages.forEach(
+            element =>
+                element.remove()
+        );
+
+
+        welcome.style.display =
+            "";
+
+
+        alert(
+            "Data FoxAI byla smazána."
+        );
+
+    }
+);
+
+
+/* =========================================
+   KOPÍROVÁNÍ KÓDU
+   ========================================= */
+
+document.addEventListener(
+    "click",
+    async event => {
+
+        const button =
+            event.target.closest(
+                ".copy-code"
+            );
+
+
+        if (!button) {
+
+            return;
+
+        }
+
+
+        const encoded =
+            button.dataset.code;
+
+
+        if (!encoded) {
+
+            return;
+
+        }
+
+
+        let code;
+
+
+        try {
+
+            code =
+                decodeURIComponent(
+                    encoded
+                );
+
+        } catch {
+
+            code =
+                encoded;
+
+        }
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                code
+            );
+
+            button.textContent =
+                "✓ Zkopírováno";
+
+        } catch {
+
+            const textarea =
+                document.createElement(
+                    "textarea"
+                );
+
+            textarea.value =
+                code;
+
+            textarea.style.position =
+                "fixed";
+
+            textarea.style.left =
+                "-9999px";
+
+            document.body.appendChild(
+                textarea
+            );
+
+            textarea.select();
+
+            document.execCommand(
+                "copy"
+            );
+
+            textarea.remove();
+
+            button.textContent =
+                "✓ Zkopírováno";
+
+        }
+
+
+        setTimeout(
+            () => {
+
+                button.textContent =
+                    "📋 Kopírovat";
+
+            },
+            1500
+        );
+
+    }
+);
+
+
+/* =========================================
+   START FOXAI
+   ========================================= */
+
+function initializeFoxAI() {
+
+    loadSettingsData();
+
+
+    aiMode.value =
+        settings.mode;
+
+
+    localModel.value =
+        settings.localModel;
+
+
+    temperature.value =
+        settings.temperature;
+
+
+    temperatureValue.textContent =
+        settings.temperature;
+
+
+    maxTokens.value =
+        settings.maxTokens;
+
+
+    maxTokensValue.textContent =
+        settings.maxTokens;
+
+
+    applyTheme();
+
+    updateModeUI();
+
+    loadHistory();
+
+    resizeInput();
+
+    scrollChat();
+
+    send.disabled =
+        true;
+
+}
+
+
+initializeFoxAI();
+
+
+console.log(
+    "🦊 FoxAI V4 — část 2/4 načtena."
+);
+
+console.log(
+    "Výchozí režim:",
+    settings.mode
+);
+
+</script>
+<script>
+
+/* =========================================
+   FOXAI V4 — ČÁST 3/4
+   LOCAL MODEL ENGINE
+   ========================================= */
+
+
+/*
+   DŮLEŽITÉ:
+   Tato část nevolá Google Gemini,
+   Puter ani žádné API.
+
+   Local Model bude pracovat přímo
+   v prohlížeči.
+*/
+
+
+/* =========================================
+   LOCAL MODEL STAV
+   ========================================= */
+
+let localModelReady = false;
+
+let localModelLoading = false;
+
+let localModelEngine = null;
+
+
+/* =========================================
+   INFORMACE O LOCAL MODELU
+   ========================================= */
+
+const localModelInfo = {
+
+    small: {
+
+        name:
+            "FoxAI Local Small",
+
+        description:
+            "Menší model pro rychlejší zařízení."
+
+    },
+
+    medium: {
+
+        name:
+            "FoxAI Local Medium",
+
+        description:
+            "Větší model s lepšími odpověďmi."
+
+    }
+
+};
+
+
+/* =========================================
+   ZJIŠTĚNÍ PODPORY PROHLÍŽEČE
+   ========================================= */
+
+function browserSupportsLocalAI() {
+
+    /*
+       Základní kontrola moderního
+       JavaScriptového prostředí.
+    */
+
+    if (
+        typeof window ===
+        "undefined"
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        typeof WebAssembly ===
+        "undefined"
+    ) {
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =========================================
+   INFORMACE PRO UŽIVATELE
+   ========================================= */
+
+function getLocalModelStatus() {
+
+    if (
+        localModelLoading
+    ) {
+
+        return {
+            state: "loading",
+            text:
+                "⏳ Načítám lokální AI model..."
+        };
+
+    }
+
+
+    if (
+        localModelReady
+    ) {
+
+        return {
+            state: "ready",
+            text:
+                "🟢 Lokální AI model je připraven."
+        };
+
+    }
+
+
+    return {
+        state: "offline",
+        text:
+            "⚪ Lokální AI model zatím není načten."
+    };
+
+}
+
+
+/* =========================================
+   OZNÁMENÍ V CHATU
+   ========================================= */
+
+function showLocalModelMessage(
+    text
+) {
+
+    renderMessage(
+        "ai",
+        text
+    );
+
+}
+
+
+/* =========================================
+   NAČTENÍ LOCAL MODELU
+   ========================================= */
+
+async function loadLocalModel() {
+
+    if (
+        localModelReady
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        localModelLoading
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        !browserSupportsLocalAI()
+    ) {
+
+        showLocalModelMessage(
+            `
+❌ Tento prohlížeč nepodporuje potřebné technologie pro Local Model.
+
+Zkus aktuální Chrome, Edge nebo jiný moderní prohlížeč.
+`
+        );
+
+        return false;
+
+    }
+
+
+    localModelLoading =
+        true;
+
+
+    showTyping();
+
+
+    try {
+
+        /*
+           V této verzi pouze připravujeme
+           engine.
+
+           Skutečný model bude připojen
+           v poslední části.
+        */
+
+        await wait(
+            800
+        );
+
+
+        localModelEngine =
+            createFoxAILocalEngine();
+
+
+        localModelReady =
+            true;
+
+
+        hideTyping();
+
+
+        console.log(
+            "🟢 FoxAI Local Engine připraven."
+        );
+
+
+        return true;
+
+    } catch (
+        error
+    ) {
+
+        hideTyping();
+
+
+        localModelReady =
+            false;
+
+
+        localModelEngine =
+            null;
+
+
+        showLocalModelMessage(
+            `
+❌ Lokální AI model se nepodařilo připravit.
+
+Chyba:
+${String(error)}
+`
+        );
+
+
+        return false;
+
+    } finally {
+
+        localModelLoading =
+            false;
+
+    }
+
+}
+
+
+/* =========================================
+   LOCAL ENGINE
+   ========================================= */
+
+function createFoxAILocalEngine() {
+
+    /*
+       Tohle je rozhraní mezi FoxAI
+       a skutečným modelem.
+
+       V poslední části sem připojíme
+       model běžící přímo v prohlížeči.
+    */
+
+
+    return {
+
+        async generate(
+            prompt,
+            options = {}
+        ) {
+
+            /*
+               Dočasná lokální fallback logika.
+
+               Nepoužívá API.
+            */
+
+            await wait(
+                500
+            );
+
+
+            return localFallbackAI(
+                prompt
+            );
+
+        }
+
+    };
+
+}
+
+
+/* =========================================
+   LOCAL FALLBACK AI
+   ========================================= */
+
+function localFallbackAI(
+    question
+) {
+
+    const text =
+        question
+            .toLowerCase()
+            .trim();
+
+
+    /* -------------------------
+       HTML
+       ------------------------- */
+
+    if (
+        text.includes("html")
+    ) {
+
+        return `
+Jasně! 🦊
+
+Tady je jednoduchá HTML stránka:
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0">
+
+    <title>Moje stránka</title>
+</head>
+
+<body>
+
+    <h1>Ahoj!</h1>
+
+    <p>
+        Toto je moje HTML stránka.
+    </p>
+
+</body>
+</html>
+\`\`\`
+
+Kód můžeš zkopírovat tlačítkem
+**📋 Kopírovat**.
+`;
+
+    }
+
+
+    /* -------------------------
+       PYTHON
+       ------------------------- */
+
+    if (
+        text.includes("python")
+    ) {
+
+        return `
+Jasně! 🐍
+
+Například jednoduchý program:
+
+\`\`\`python
+jmeno = input(
+    "Jak se jmenuješ? "
+)
+
+print(
+    "Ahoj, " +
+    jmeno +
+    "!"
+)
+\`\`\`
+
+Kód je možné okamžitě zkopírovat.
+`;
+
+    }
+
+
+    /* -------------------------
+       JAVASCRIPT
+       ------------------------- */
+
+    if (
+        text.includes(
+            "javascript"
+        ) ||
+        text.includes(
+            "js"
+        )
+    ) {
+
+        return `
+Tady je jednoduchý JavaScript:
+
+\`\`\`javascript
+const jmeno = "Tonda";
+
+console.log(
+    "Ahoj " + jmeno + "!"
+);
+\`\`\`
+`;
+
+    }
+
+
+    /* -------------------------
+       CSS
+       ------------------------- */
+
+    if (
+        text.includes("css")
+    ) {
+
+        return `
+Tady je jednoduchý CSS příklad:
+
+\`\`\`css
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+h1 {
+    text-align: center;
+}
+\`\`\`
+`;
+
+    }
+
+
+    /* -------------------------
+       POZDRAV
+       ------------------------- */
+
+    if (
+        text === "ahoj" ||
+        text === "čau" ||
+        text === "cus" ||
+        text === "čus"
+    ) {
+
+        return `
+Ahoj! 🦊
+
+Jsem FoxAI Local.
+
+Aktuálně běžím bez API a bez přihlášení.
+
+Co chceš vytvořit?
+`;
+
+    }
+
+
+    /* -------------------------
+       DEFAULT
+       ------------------------- */
+
+    return `
+🦊 FoxAI Local
+
+Tvoje zpráva:
+
+"${question}"
+
+Lokální režim je aktivní.
+
+V poslední části bude do tohoto systému připojen skutečný model, aby FoxAI nemusela používat žádné vzdálené AI API.
+`;
+
+}
+
+
+/* =========================================
+   GENEROVÁNÍ LOCAL ODPOVĚDI
+   ========================================= */
+
+async function generateLocalResponse(
+    prompt
+) {
+
+    if (
+        !localModelReady
+    ) {
+
+        const loaded =
+            await loadLocalModel();
+
+
+        if (!loaded) {
+
+            return null;
+
+        }
+
+    }
+
+
+    if (
+        !localModelEngine
+    ) {
+
+        throw new Error(
+            "Local AI engine není dostupný."
+        );
+
+    }
+
+
+    const response =
+        await localModelEngine.generate(
+            prompt,
+            {
+
+                temperature:
+                    settings.temperature,
+
+                maxTokens:
+                    settings.maxTokens,
+
+                model:
+                    settings.localModel
+
+            }
+        );
+
+
+    return cleanAIResponse(
+        response
+    );
+
+}
+
+
+/* =========================================
+   NORMALIZACE ODPOVĚDI
+   ========================================= */
+
+function cleanAIResponse(
+    response
+) {
+
+    if (
+        typeof response ===
+        "string"
+    ) {
+
+        return response;
+
+    }
+
+
+    if (
+        response &&
+        typeof response.text ===
+        "string"
+    ) {
+
+        return response.text;
+
+    }
+
+
+    if (
+        response &&
+        response.message &&
+        typeof response.message.content ===
+        "string"
+    ) {
+
+        return response.message.content;
+
+    }
+
+
+    try {
+
+        return JSON.stringify(
+            response,
+            null,
+            2
+        );
+
+    } catch {
+
+        return String(
+            response
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   ZACHYCENÍ LOCAL REŽIMU
+   ========================================= */
+
+
+/*
+   Uložíme původní funkci.
+*/
+
+const foxaiOriginalSendMessage =
+    sendMessage;
+
+
+/*
+   sendMessage z části 2/4
+   nahradíme vlastní verzí.
+*/
+
+sendMessage =
+    async function () {
+
+        /*
+           Pokud je vybrán Basic,
+           použijeme původní funkci.
+        */
+
+        if (
+            settings.mode ===
+            "basic"
+        ) {
+
+            return foxaiOriginalSendMessage();
+
+        }
+
+
+        /*
+           LOCAL MODEL
+        */
+
+        if (
+            generating
+        ) {
+
+            return;
+
+        }
+
+
+        const text =
+            input.value.trim();
+
+
+        if (!text) {
+
+            return;
+
+        }
+
+
+        generating =
+            true;
+
+        send.disabled =
+            true;
+
+
+        input.value = "";
+
+        resizeInput();
+
+
+        renderMessage(
+            "user",
+            text
+        );
+
+
+        showTyping();
+
+
+        try {
+
+            const answer =
+                await generateLocalResponse(
+                    text
+                );
+
+
+            hideTyping();
+
+
+            if (
+                answer
+            ) {
+
+                renderMessage(
+                    "ai",
+                    answer
+                );
+
+            }
+
+
+        } catch (
+            error
+        ) {
+
+            hideTyping();
+
+
+            renderMessage(
+                "ai",
+                `
+❌ Local Model chyba:
+
+${String(error)}
+`
+            );
+
+
+        } finally {
+
+            generating =
+                false;
+
+            send.disabled =
+                !input.value.trim();
+
+            input.focus();
+
+        }
+
+    };
+
+
+/* =========================================
+   PŘI ZMĚNĚ NA LOCAL MODEL
+   ========================================= */
+
+aiMode.addEventListener(
+    "change",
+    async () => {
+
+        settings.mode =
+            aiMode.value;
+
+
+        saveSettingsData();
+
+
+        if (
+            settings.mode ===
+            "local"
+        ) {
+
+            showLocalModelMessage(
+                `
+🔵 **FoxAI Local Model**
+
+Režim byl zapnut.
+
+Model bude běžet přímo v prohlížeči.
+
+❌ API není potřeba.
+❌ Přihlášení není potřeba.
+
+⏳ Připravuji Local Engine...
+`
+            );
+
+
+            await loadLocalModel();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   PŘEDNAČTENÍ POUZE V LOCAL REŽIMU
+   ========================================= */
+
+if (
+    settings.mode ===
+    "local"
+) {
+
+    setTimeout(
+        () => {
+
+            loadLocalModel();
+
+        },
+        500
+    );
+
+}
+
+
+/* =========================================
+   INFO DO KONZOLE
+   ========================================= */
+
+console.log(
+    "🦊 FoxAI V4 — část 3/4 načtena."
+);
+
+console.log(
+    "Local Model:",
+    settings.mode === "local"
+        ? "aktivní"
+        : "neaktivní"
+);
+
+</script>
+
+<script>
+
+/* =========================================
+   FOXAI — ČÁST 4/4
+   DOKONČENÍ APLIKACE
+   ========================================= */
+
+
+/* =========================================
+   INFORMACE O APLIKACI
+   ========================================= */
+
+const FOXAI_NAME =
+    "FoxAI";
+
+const FOXAI_PROJECT =
+    "TondaFox AI Project 1";
+
+const FOXAI_VERSION =
+    "4.0";
+
+
+/* =========================================
+   ZOBRAZENÍ INFORMACÍ
+   ========================================= */
+
+function foxaiAbout() {
+
+    alert(
+        FOXAI_NAME +
+        "\n\n" +
+
+        FOXAI_PROJECT +
+        "\n" +
+
+        "Verze " +
+        FOXAI_VERSION +
+        "\n\n" +
+
+        "🦊 AI chatbot\n" +
+
+        "💻 Podpora programování\n" +
+
+        "📋 Kopírování kódu\n" +
+
+        "🌙 Tmavý režim\n" +
+
+        "💾 Lokální historie\n\n" +
+
+        "Režim Basic funguje bez API."
+    );
+
+}
+
+
+/* =========================================
+   KONTROLA KÓDOVÝCH BLOKŮ
+   ========================================= */
+
+function fixCodeButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".copy-code"
+        );
+
+
+    buttons.forEach(
+        button => {
+
+            if (
+                button.dataset.ready ===
+                "true"
+            ) {
+
+                return;
+
+            }
+
+
+            button.dataset.ready =
+                "true";
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   PO VYKRESLENÍ ODPOVĚDI
+   ========================================= */
+
+const foxaiOriginalRenderMessage =
+    renderMessage;
+
+
+renderMessage =
+    function (
+        role,
+        text,
+        addToHistory = true
+    ) {
+
+        foxaiOriginalRenderMessage(
+            role,
+            text,
+            addToHistory
+        );
+
+
+        setTimeout(
+            fixCodeButtons,
+            0
+        );
+
+    };
+
+
+/* =========================================
+   KOPÍROVÁNÍ KÓDU — BEZPEČNĚJŠÍ VARIANTA
+   ========================================= */
+
+document.addEventListener(
+    "click",
+    async event => {
+
+        const button =
+            event.target.closest(
+                ".copy-code"
+            );
+
+
+        if (!button) {
+
+            return;
+
+        }
+
+
+        const card =
+            button.closest(
+                ".code-card"
+            );
+
+
+        if (!card) {
+
+            return;
+
+        }
+
+
+        const codeElement =
+            card.querySelector(
+                "code"
+            );
+
+
+        if (!codeElement) {
+
+            return;
+
+        }
+
+
+        const code =
+            codeElement.textContent;
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                code
+            );
+
+
+            const oldText =
+                button.textContent;
+
+
+            button.textContent =
+                "✓ Zkopírováno";
+
+
+            setTimeout(
+                () => {
+
+                    button.textContent =
+                        oldText ||
+                        "📋 Kopírovat";
+
+                },
+                1500
+            );
+
+
+        } catch (
+            error
+        ) {
+
+            /*
+               Záložní metoda pro starší
+               prohlížeče.
+            */
+
+            const textarea =
+                document.createElement(
+                    "textarea"
+                );
+
+
+            textarea.value =
+                code;
+
+
+            textarea.style.position =
+                "fixed";
+
+            textarea.style.opacity =
+                "0";
+
+
+            document.body.appendChild(
+                textarea
+            );
+
+
+            textarea.focus();
+
+            textarea.select();
+
+
+            try {
+
+                document.execCommand(
+                    "copy"
+                );
+
+
+                button.textContent =
+                    "✓ Zkopírováno";
+
+
+            } catch {
+
+                button.textContent =
+                    "❌ Kopírování selhalo";
+
+            }
+
+
+            textarea.remove();
+
+
+            setTimeout(
+                () => {
+
+                    button.textContent =
+                        "📋 Kopírovat";
+
+                },
+                1500
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   CTRL + ENTER
+   ========================================= */
+
+input.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.ctrlKey &&
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   ESC = ZAVŘÍT NASTAVENÍ
+   ========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            if (
+                settingsOverlay.classList.contains(
+                    "open"
+                )
+            ) {
+
+                closeSettingsWindow();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   AUTOMATICKÉ ULOŽENÍ NASTAVENÍ
+   ========================================= */
+
+setInterval(
+    () => {
+
+        settings.mode =
+            aiMode.value;
+
+
+        settings.localModel =
+            localModel.value;
+
+
+        settings.temperature =
+            Number(
+                temperature.value
+            );
+
+
+        settings.maxTokens =
+            Number(
+                maxTokens.value
+            );
+
+
+        saveSettingsData();
+
+    },
+    5000
+);
+
+
+/* =========================================
+   OCHRANA PROTI ZTRÁTĚ TEXTU
+   ========================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (
+            input.value.trim()
+        ) {
+
+            try {
+
+                sessionStorage.setItem(
+                    "foxai-draft",
+                    input.value
+                );
+
+            } catch {}
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   OBNOVENÍ ROZPSANÉ ZPRÁVY
+   ========================================= */
+
+function restoreDraft() {
+
+    try {
+
+        const draft =
+            sessionStorage.getItem(
+                "foxai-draft"
+            );
+
+
+        if (
+            draft
+        ) {
+
+            input.value =
+                draft;
+
+
+            resizeInput();
+
+
+            send.disabled =
+                false;
+
+
+            sessionStorage.removeItem(
+                "foxai-draft"
+            );
+
+        }
+
+    } catch {}
+
+}
+
+
+restoreDraft();
+
+
+/* =========================================
+   ONLINE / OFFLINE STAV
+   ========================================= */
+
+function updateConnectionStatus() {
+
+    const online =
+        navigator.onLine;
+
+
+    document.body.classList.toggle(
+        "offline",
+        !online
+    );
+
+
+    console.log(
+        online
+            ? "🌐 Připojení: online"
+            : "📴 Připojení: offline"
+    );
+
+}
+
+
+window.addEventListener(
+    "online",
+    updateConnectionStatus
+);
+
+
+window.addEventListener(
+    "offline",
+    updateConnectionStatus
+);
+
+
+updateConnectionStatus();
+
+
+/* =========================================
+   PWA / GITHUB FRIENDLY
+   ========================================= */
+
+if (
+    "serviceWorker" in navigator
+) {
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            /*
+               Service Worker je volitelný.
+               Pokud v projektu neexistuje,
+               nic se nestane.
+            */
+
+            navigator.serviceWorker
+                .register(
+                    "./sw.js"
+                )
+                .then(
+                    registration => {
+
+                        console.log(
+                            "🦊 FoxAI Service Worker:",
+                            registration.scope
+                        );
+
+                    }
+                )
+                .catch(
+                    () => {
+
+                        /*
+                           Service Worker není
+                           nutný pro samotný chat.
+                        */
+
+                    }
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   STARTOVNÍ ZPRÁVA
+   ========================================= */
+
+function foxaiStartup() {
+
+    /*
+       Pokud je úplně nový chat,
+       necháme úvodní obrazovku.
+    */
+
+    if (
+        messages.length === 0
+    ) {
+
+        welcome.style.display =
+            "";
+
+    }
+
+
+    input.focus();
+
+}
+
+
+foxaiStartup();
+
+
+/* =========================================
+   GLOBÁLNÍ FOXAI API
+   ========================================= */
+
+window.FoxAI = {
+
+    name:
+        FOXAI_NAME,
+
+    project:
+        FOXAI_PROJECT,
+
+    version:
+        FOXAI_VERSION,
+
+
+    send:
+        async function (
+            text
+        ) {
+
+            if (
+                !text ||
+                !String(text).trim()
+            ) {
+
+                return;
+
+            }
+
+
+            input.value =
+                String(text);
+
+
+            resizeInput();
+
+
+            await sendMessage();
+
+        },
+
+
+    clear:
+        function () {
+
+            messages = [];
+
+            localStorage.removeItem(
+                "foxai-history"
+            );
+
+
+            const oldMessages =
+                chatInner.querySelectorAll(
+                    ".message"
+                );
+
+
+            oldMessages.forEach(
+                element =>
+                    element.remove()
+            );
+
+
+            welcome.style.display =
+                "";
+
+        },
+
+
+    settings:
+        function () {
+
+            openSettings();
+
+        }
+
+};
+
+
+/* =========================================
+   HOTKEY PRO NOVÝ CHAT
+   ========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.ctrlKey &&
+            event.key.toLowerCase() ===
+            "n"
+        ) {
+
+            event.preventDefault();
+
+            newChat.click();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   FINÁLNÍ KONTROLA
+   ========================================= */
+
+function foxaiFinalCheck() {
+
+    const required = [
+
+        chat,
+
+        input,
+
+        send,
+
+        settingsOverlay,
+
+        aiMode
+
+    ];
+
+
+    const missing =
+        required.filter(
+            element =>
+                !element
+        );
+
+
+    if (
+        missing.length > 0
+    ) {
+
+        console.warn(
+            "⚠️ FoxAI: některé HTML prvky chybí."
+        );
+
+        return false;
+
+    }
+
+
+    console.log(
+        "🟢 FoxAI je připravena."
+    );
+
+
+    console.log(
+        "🦊 " +
+        FOXAI_NAME +
+        " — " +
+        FOXAI_PROJECT
+    );
+
+
+    console.log(
+        "Verze:",
+        FOXAI_VERSION
+    );
+
+
+    console.log(
+        "AI režim:",
+        settings.mode
+    );
+
+
+    return true;
+
+}
+
+
+foxaiFinalCheck();
+
+
+/* =========================================
+   KONEC FOXAI
+   ========================================= */
+
+console.log(
+    "================================="
+);
+
+console.log(
+    "🦊 FOXAI"
+);
+
+console.log(
+    "TondaFox AI Project 1"
+);
+
+console.log(
+    "Verze 4.0"
+);
+
+console.log(
+    "================================="
+);
+
+</script>
+
+</body>
+</html>
