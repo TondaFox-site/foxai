@@ -1773,3 +1773,1086 @@ console.log(
 
 </script>
 
+<style>
+/* =========================================================
+   FOXAI V6 — 4A
+   VIZUÁLNÍ DOKONČENÍ + NASTAVENÍ
+   ========================================================= */
+
+body.dark {
+    background: #171717;
+    color: #eeeeee;
+}
+
+body.dark .input-area {
+    background: rgba(25,25,25,.96);
+    border-top-color: #333;
+}
+
+body.dark #input {
+    background: #252525;
+    color: white;
+    border-color: #444;
+}
+
+body.dark #input::placeholder {
+    color: #999;
+}
+
+body.dark .bubble {
+    background: #292929;
+    color: #eeeeee;
+}
+
+body.dark .avatar {
+    background: #303030;
+}
+
+body.dark .welcome p {
+    color: #aaa;
+}
+
+
+/* ==============================
+   NASTAVENÍ
+   ============================== */
+
+.settings-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(7px);
+}
+
+.settings-overlay.open {
+    display: flex;
+}
+
+.settings {
+    width: min(430px,100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    border-radius: 22px;
+    background: white;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+
+body.dark .settings {
+    background: #242424;
+    color: white;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.settings-header h2 {
+    margin: 0;
+}
+
+.close-settings {
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 12px;
+    background: #eee;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+body.dark .close-settings {
+    background: #333;
+    color: white;
+}
+
+.setting {
+    margin: 18px 0;
+}
+
+.setting label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.setting select,
+.setting input[type="range"] {
+    width: 100%;
+}
+
+.setting select {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+body.dark .setting select {
+    background: #333;
+    color: white;
+    border-color: #555;
+}
+
+.range-value {
+    display: block;
+    margin-top: 5px;
+    color: #777;
+    font-size: 13px;
+}
+
+.settings-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 22px;
+}
+
+.settings-buttons button {
+    flex: 1;
+    padding: 11px;
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.save-settings {
+    background: #ff8a00;
+    color: white;
+}
+
+.clear-settings {
+    background: #eee;
+}
+
+body.dark .clear-settings {
+    background: #333;
+    color: white;
+}
+
+
+/* ==============================
+   ANIMACE ZPRÁV
+   ============================== */
+
+.message {
+    animation: foxMessageIn .22s ease;
+}
+
+@keyframes foxMessageIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ==============================
+   TLAČÍTKO ODESLÁNÍ
+   ============================== */
+
+#send {
+    transition:
+        transform .15s,
+        opacity .15s;
+}
+
+#send:not(:disabled):hover {
+    transform: scale(1.05);
+}
+
+#send:not(:disabled):active {
+    transform: scale(.94);
+}
+
+</style>
+
+
+<!-- ======================================================
+     NASTAVENÍ
+     ====================================================== -->
+
+<div
+    class="settings-overlay"
+    id="settingsOverlay"
+>
+
+    <div class="settings">
+
+        <div class="settings-header">
+
+            <h2>
+                ⚙️ Nastavení
+            </h2>
+
+            <button
+                class="close-settings"
+                id="closeSettings"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="setting">
+
+            <label for="modelSelect">
+                🤖 Režim AI
+            </label>
+
+            <select id="modelSelect">
+
+                <option value="server">
+                    🦊 FoxAI Server
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="setting">
+
+            <label for="temperature">
+                🌡️ Kreativita
+            </label>
+
+            <input
+                id="temperature"
+                type="range"
+                min="0"
+                max="1.5"
+                step="0.1"
+                value="0.7"
+            >
+
+            <span
+                class="range-value"
+                id="temperatureValue"
+            >
+                0.7
+            </span>
+
+        </div>
+
+
+        <div class="setting">
+
+            <label for="maxTokens">
+                📝 Délka odpovědi
+            </label>
+
+            <input
+                id="maxTokens"
+                type="range"
+                min="100"
+                max="4000"
+                step="100"
+                value="1000"
+            >
+
+            <span
+                class="range-value"
+                id="maxTokensValue"
+            >
+                1000
+            </span>
+
+        </div>
+
+
+        <div class="settings-buttons">
+
+            <button
+                class="save-settings"
+                id="saveSettings"
+            >
+                ✓ Uložit
+            </button>
+
+            <button
+                class="clear-settings"
+                id="clearSettings"
+            >
+                🗑️ Smazat data
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   FOXAI V6 — 4A JAVASCRIPT
+   ========================================================= */
+
+const settingsOverlay =
+    document.getElementById(
+        "settingsOverlay"
+    );
+
+const settingsButton =
+    document.getElementById(
+        "settingsButton"
+    );
+
+const closeSettings =
+    document.getElementById(
+        "closeSettings"
+    );
+
+const saveSettings =
+    document.getElementById(
+        "saveSettings"
+    );
+
+const clearSettings =
+    document.getElementById(
+        "clearSettings"
+    );
+
+const temperature =
+    document.getElementById(
+        "temperature"
+    );
+
+const temperatureValue =
+    document.getElementById(
+        "temperatureValue"
+    );
+
+const maxTokens =
+    document.getElementById(
+        "maxTokens"
+    );
+
+const maxTokensValue =
+    document.getElementById(
+        "maxTokensValue"
+    );
+
+
+/* ==============================
+   OTEVŘENÍ NASTAVENÍ
+   ============================== */
+
+settingsButton.addEventListener(
+    "click",
+    () => {
+
+        settingsOverlay.classList.add(
+            "open"
+        );
+
+    }
+);
+
+
+/* ==============================
+   ZAVŘENÍ
+   ============================== */
+
+closeSettings.addEventListener(
+    "click",
+    () => {
+
+        settingsOverlay.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+/* ==============================
+   KLIK MIMO OKNO
+   ============================== */
+
+settingsOverlay.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            settingsOverlay
+        ) {
+
+            settingsOverlay.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+
+
+/* ==============================
+   SLIDER TEPLOTY
+   ============================== */
+
+temperature.addEventListener(
+    "input",
+    () => {
+
+        temperatureValue.textContent =
+            temperature.value;
+
+    }
+);
+
+
+/* ==============================
+   SLIDER TOKENŮ
+   ============================== */
+
+maxTokens.addEventListener(
+    "input",
+    () => {
+
+        maxTokensValue.textContent =
+            maxTokens.value;
+
+    }
+);
+
+
+/* ==============================
+   ULOŽENÍ
+   ============================== */
+
+saveSettings.addEventListener(
+    "click",
+    () => {
+
+        localStorage.setItem(
+            "foxai-temperature",
+            temperature.value
+        );
+
+        localStorage.setItem(
+            "foxai-max-tokens",
+            maxTokens.value
+        );
+
+        settingsOverlay.classList.remove(
+            "open"
+        );
+
+    }
+);
+
+
+/* ==============================
+   NAČTENÍ
+   ============================== */
+
+const savedTemperature =
+    localStorage.getItem(
+        "foxai-temperature"
+    );
+
+const savedTokens =
+    localStorage.getItem(
+        "foxai-max-tokens"
+    );
+
+
+if (
+    savedTemperature !== null
+) {
+
+    temperature.value =
+        savedTemperature;
+
+    temperatureValue.textContent =
+        savedTemperature;
+
+}
+
+
+if (
+    savedTokens !== null
+) {
+
+    maxTokens.value =
+        savedTokens;
+
+    maxTokensValue.textContent =
+        savedTokens;
+
+}
+
+
+/* ==============================
+   SMAZÁNÍ DAT
+   ============================== */
+
+clearSettings.addEventListener(
+    "click",
+    () => {
+
+        localStorage.clear();
+
+        location.reload();
+
+    }
+);
+
+
+/* ==============================
+   HOTOVO 4A
+   ============================== */
+
+console.log(
+    "🦊 FoxAI V6 — 4A načtena."
+);
+
+</script>
+    
+<script>
+
+/* =========================================================
+   FOXAI V6 — 4B
+   KÓDOVÉ BLOKY + KOPÍROVÁNÍ + DOKONČENÍ
+   ========================================================= */
+
+
+/* =========================================================
+   BEZPEČNÉ HTML
+   ========================================================= */
+
+function foxEscapeHTML(text) {
+
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================================================
+   VYKRESLENÍ ODPOVĚDI
+   ========================================================= */
+
+function renderFoxAnswer(text) {
+
+    const container =
+        document.createElement("div");
+
+
+    /*
+     * Hledáme bloky:
+     *
+     * ```html
+     * ...
+     * ```
+     */
+
+    const codeRegex =
+        /```([a-zA-Z0-9_+#.-]*)?\s*\n?([\s\S]*?)```/g;
+
+
+    let lastIndex = 0;
+
+    let match;
+
+
+    while (
+        (match = codeRegex.exec(text)) !== null
+    ) {
+
+        /* Text před kódem */
+
+        const before =
+            text.slice(
+                lastIndex,
+                match.index
+            );
+
+
+        if (before.trim()) {
+
+            const textElement =
+                document.createElement("div");
+
+            textElement.textContent =
+                before.trim();
+
+            container.appendChild(
+                textElement
+            );
+
+        }
+
+
+        /* Jazyk */
+
+        const language =
+            match[1] ||
+            "code";
+
+
+        /* Samotný kód */
+
+        const code =
+            match[2].trim();
+
+
+        /* Box */
+
+        const codeBox =
+            document.createElement("div");
+
+        codeBox.className =
+            "code-box";
+
+
+        /* Hlavička */
+
+        const header =
+            document.createElement("div");
+
+        header.className =
+            "code-header";
+
+
+        const languageName =
+            document.createElement("span");
+
+        languageName.textContent =
+            language;
+
+
+        /* Kopírovací tlačítko */
+
+        const copyButton =
+            document.createElement("button");
+
+        copyButton.className =
+            "copy-code";
+
+        copyButton.textContent =
+            "📋 Kopírovat";
+
+
+        copyButton.addEventListener(
+            "click",
+            async () => {
+
+                try {
+
+                    await navigator.clipboard.writeText(
+                        code
+                    );
+
+                    copyButton.textContent =
+                        "✓ Zkopírováno";
+
+
+                    setTimeout(
+                        () => {
+
+                            copyButton.textContent =
+                                "📋 Kopírovat";
+
+                        },
+                        1600
+                    );
+
+                }
+
+                catch (error) {
+
+                    copyButton.textContent =
+                        "❌ Nelze kopírovat";
+
+                    console.error(
+                        "FoxAI kopírování:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+
+        header.appendChild(
+            languageName
+        );
+
+        header.appendChild(
+            copyButton
+        );
+
+
+        /* Kód */
+
+        const pre =
+            document.createElement("pre");
+
+        pre.className =
+            "code-content";
+
+        pre.innerHTML =
+            foxEscapeHTML(code);
+
+
+        codeBox.appendChild(
+            header
+        );
+
+        codeBox.appendChild(
+            pre
+        );
+
+
+        container.appendChild(
+            codeBox
+        );
+
+
+        lastIndex =
+            codeRegex.lastIndex;
+
+    }
+
+
+    /* =====================================================
+       TEXT ZA POSLEDNÍM KÓDEM
+       ===================================================== */
+
+    const after =
+        text.slice(lastIndex);
+
+
+    if (after.trim()) {
+
+        const textElement =
+            document.createElement("div");
+
+        textElement.textContent =
+            after.trim();
+
+        container.appendChild(
+            textElement
+        );
+
+    }
+
+
+    /*
+     * Pokud AI neposlala žádný kód,
+     * zobrazíme normální odpověď.
+     */
+
+    if (
+        container.children.length === 0
+    ) {
+
+        container.textContent =
+            text;
+
+    }
+
+
+    return container;
+
+}
+
+
+/* =========================================================
+   NOVÁ FUNKCE PRO ODPOVĚĎ FOXAI
+   ========================================================= */
+
+function showFoxAnswerWithCode(text) {
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message assistant";
+
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "avatar";
+
+    avatar.textContent =
+        "🦊";
+
+
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "message-content";
+
+
+    const author =
+        document.createElement("div");
+
+    author.className =
+        "author";
+
+    author.textContent =
+        "FoxAI";
+
+
+    const bubble =
+        document.createElement("div");
+
+    bubble.className =
+        "bubble";
+
+
+    const rendered =
+        renderFoxAnswer(text);
+
+
+    bubble.appendChild(
+        rendered
+    );
+
+
+    content.appendChild(
+        author
+    );
+
+    content.appendChild(
+        bubble
+    );
+
+
+    message.appendChild(
+        avatar
+    );
+
+    message.appendChild(
+        content
+    );
+
+
+    chatInner.appendChild(
+        message
+    );
+
+
+    chat.scrollTop =
+        chat.scrollHeight;
+
+
+    return message;
+
+}
+
+
+/* =========================================================
+   NAHRADÍME PŮVODNÍ ZOBRAZENÍ ODPOVĚDI
+   ========================================================= */
+
+/*
+ * 2/4 už vytvořila funkci showFoxAnswer().
+ *
+ * Přepíšeme ji novou verzí,
+ * která umí i kódové bloky.
+ */
+
+showFoxAnswer =
+    showFoxAnswerWithCode;
+
+
+/* =========================================================
+   PODPORA KOPÍROVÁNÍ
+   ========================================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const button =
+            event.target.closest(
+                ".copy-code"
+            );
+
+
+        if (!button) {
+
+            return;
+
+        }
+
+
+        /*
+         * Pokud se kliknutí dostalo sem,
+         * samotné tlačítko už má svůj handler.
+         */
+
+    }
+);
+
+
+/* =========================================================
+   TLAČÍTKO NOVÝ CHAT
+   ========================================================= */
+
+const foxNewChat =
+    document.getElementById(
+        "newChat"
+    );
+
+
+if (foxNewChat) {
+
+    foxNewChat.addEventListener(
+        "click",
+        () => {
+
+            localStorage.removeItem(
+                "foxai-chat"
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ULOŽENÍ HISTORIE
+   ========================================================= */
+
+function saveFoxHistory() {
+
+    try {
+
+        localStorage.setItem(
+            "foxai-chat",
+            JSON.stringify(
+                FoxAI.messages
+            )
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "FoxAI: historii se nepodařilo uložit.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTOMATICKÉ UKLÁDÁNÍ
+   ========================================================= */
+
+setInterval(
+    saveFoxHistory,
+    2000
+);
+
+
+/* =========================================================
+   ESC — ZAVŘENÍ NASTAVENÍ
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            settingsOverlay.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   STARTOVACÍ INFORMACE
+   ========================================================= */
+
+console.log(
+    "================================="
+);
+
+console.log(
+    "🦊 FoxAI V6"
+);
+
+console.log(
+    "TondaFox AI Project 1"
+);
+
+console.log(
+    "Frontend: READY"
+);
+
+console.log(
+    "Code blocks: READY"
+);
+
+console.log(
+    "Copy button: READY"
+);
+
+console.log(
+    "Startup animation: READY"
+);
+
+console.log(
+    "Thinking animation: READY"
+);
+
+console.log(
+    "API key in frontend: NONE"
+);
+
+console.log(
+    "Local model download: NONE"
+);
+
+console.log(
+    "================================="
+);
+
+</script>
+
+
+</body>
+
+</html>
+
