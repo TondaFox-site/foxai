@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TondaFox 3D World</title>
+
+<link rel="icon"
+href="https://raw.githubusercontent.com/TondaFox-site/images/refs/heads/main/unnamed-removebg-preview.png">
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+    background:#000;
+}
+
+#game{
+    position:fixed;
+    inset:0;
+}
+
+canvas{
+    display:block;
+}
+
+
+/* ==============================
+   HUD
+============================== */
+
+#hud{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    color:white;
+    z-index:10;
+}
+
+.panel{
+    background:rgba(0,0,0,.58);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:15px;
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
+}
+
+#logo{
+    position:absolute;
+    top:15px;
+    left:15px;
+
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    padding:9px 14px;
+
+    font-weight:900;
+}
+
+#logo img{
+    width:36px;
+    height:36px;
+    object-fit:contain;
+}
+
+#coordinates{
+    position:absolute;
+    top:70px;
+    left:15px;
+
+    padding:10px 13px;
+
+    font-family:monospace;
+    font-size:14px;
+}
+
+#objective{
+    position:absolute;
+    top:15px;
+    right:15px;
+
+    padding:13px 17px;
+
+    min-width:230px;
+}
+
+.objective-title{
+    color:#ff9a2f;
+    font-weight:900;
+    margin-bottom:6px;
+}
+
+#found{
+    font-size:14px;
+}
+
+#targetInfo{
+    margin-top:7px;
+    color:#aaa;
+    font-size:12px;
+    line-height:1.5;
+}
+
+
+/* ==============================
+   CROSSHAIR
+============================== */
+
+#crosshair{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    width:20px;
+    height:20px;
+
+    transform:translate(-50%,-50%);
+}
+
+#crosshair::before,
+#crosshair::after{
+    content:"";
+
+    position:absolute;
+
+    background:white;
+
+    box-shadow:
+        0 0 3px black;
+}
+
+#crosshair::before{
+    width:20px;
+    height:2px;
+
+    top:9px;
+}
+
+#crosshair::after{
+    width:2px;
+    height:20px;
+
+    left:9px;
+}
+
+
+/* ==============================
+   BOTTOM
+============================== */
+
+#controls{
+    position:absolute;
+
+    left:50%;
+    bottom:18px;
+
+    transform:translateX(-50%);
+
+    text-align:center;
+}
+
+#controls .panel{
+    padding:9px 15px;
+
+    font-size:12px;
+
+    color:#ddd;
+}
+
+
+/* ==============================
+   START SCREEN
+============================== */
+
+#start{
+    position:fixed;
+    inset:0;
+
+    z-index:100;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,122,0,.18),
+            rgba(0,0,0,.94)
+        );
+
+    color:white;
+
+    text-align:center;
+}
+
+.start-box{
+    width:min(600px,calc(100% - 30px));
+
+    padding:35px;
+
+    border-radius:25px;
+
+    background:rgba(20,20,20,.82);
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.6);
+}
+
+.start-logo{
+    width:100px;
+    height:100px;
+    object-fit:contain;
+
+    animation:
+        foxFloat 2s ease-in-out infinite alternate;
+}
+
+@keyframes foxFloat{
+
+    to{
+        transform:
+            translateY(-10px)
+            rotate(4deg);
+    }
+
+}
+
+.start-box h1{
+    font-size:
+        clamp(35px,7vw,65px);
+
+    margin:10px 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff6b00,
+            #ffc15c
+        );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.start-box p{
+    color:#aaa;
+    line-height:1.7;
+}
+
+.start-button{
+    margin-top:25px;
+
+    padding:15px 28px;
+
+    border:0;
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff6900,
+            #ffae35
+        );
+
+    color:white;
+
+    font-weight:900;
+    font-size:16px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 30px
+        rgba(255,105,0,.3);
+}
+
+.start-button:hover{
+    transform:scale(1.04);
+}
+
+
+/* ==============================
+   WIN
+============================== */
+
+#win{
+    position:fixed;
+    inset:0;
+
+    z-index:200;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+
+    text-align:center;
+
+    color:white;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,120,0,.3),
+            rgba(0,0,0,.94)
+        );
+}
+
+#win img{
+    width:130px;
+    height:130px;
+    object-fit:contain;
+
+    animation:
+        win 1s ease-in-out infinite alternate;
+}
+
+@keyframes win{
+
+    to{
+        transform:
+            translateY(-15px)
+            rotate(-5deg)
+            scale(1.08);
+    }
+
+}
+
+#win h1{
+    font-size:
+        clamp(38px,7vw,75px);
+
+    margin:15px 0;
+
+    color:#ff9b32;
+}
+
+#win p{
+    color:#ddd;
+    line-height:1.7;
+}
+
+.restart{
+    margin-top:25px;
+
+    padding:13px 25px;
+
+    border:0;
+    border-radius:12px;
+
+    background:#ff7500;
+
+    color:white;
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+
+/* ==============================
+   MOBILE
+============================== */
+
+#mobile{
+    display:none;
+
+    position:fixed;
+
+    bottom:20px;
+    left:20px;
+
+    z-index:20;
+
+    pointer-events:auto;
+}
+
+.mobile-button{
+    width:50px;
+    height:50px;
+
+    margin:3px;
+
+    border:1px solid #777;
+    border-radius:10px;
+
+    background:rgba(0,0,0,.65);
+
+    color:white;
+
+    font-size:20px;
+}
+
+@media(max-width:700px){
+
+    #mobile{
+        display:block;
+    }
+
+    #objective{
+        top:auto;
+        bottom:15px;
+        right:15px;
+        min-width:170px;
+    }
+
+    #controls{
+        display:none;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<div id="game"></div>
+
+
+<!-- HUD -->
+
+<div id="hud">
+
+    <div id="logo" class="panel">
+
+        <img src="https://raw.githubusercontent.com/TondaFox-site/images/refs/heads/main/unnamed-removebg-preview.png">
+
+        <span>TondaFox 3D World</span>
+
+    </div>
+
+
+    <div id="coordinates" class="panel">
+        X: 0<br>
+        Y: 0<br>
+        Z: 0
+    </div>
+
+
+    <div id="objective" class="panel">
+
+        <div class="objective-title">
+            🦊 T-FOX QUEST
+        </div>
+
+        <div id="found">
+            TondaFox Blocky: 0 / 3
+        </div>
+
+        <div id="targetInfo">
+            Najdi všechny tři
+            TondaFox Blocky.
+        </div>
+
+    </div>
+
+
+    <div id="crosshair"></div>
+
+
+    <div id="controls">
+        <div class="panel">
+            WASD = pohyb &nbsp; | &nbsp;
+            Myš = rozhlížení &nbsp; | &nbsp;
+            Space = skok &nbsp; | &nbsp;
+            Klik = těžit
+        </div>
+    </div>
+
+</div>
+
+
+<!-- START -->
+
+<div id="start">
+
+    <div class="start-box">
+
+        <img
+        class="start-logo"
+        src="https://raw.githubusercontent.com/TondaFox-site/images/refs/heads/main/unnamed-removebg-preview.png">
+
+        <h1>
+            TondaFox 3D World
+        </h1>
+
+        <p>
+
+            Vítej v mém 3D světě! 🦊
+
+            <br><br>
+
+            Svět má rozměry
+            <strong>50 × 50 × 50 bloků</strong>.
+
+            <br>
+
+            Někde v něm jsou ukryté
+            <strong>3 TondaFox Blocky</strong>.
+
+            <br><br>
+
+            Najdi všechny tři
+            a dokonči T-Fox Quest!
+
+        </p>
+
+
+        <button
+        class="start-button"
+        onclick="startGame()">
+
+            🎮 SPUSTIT HRU
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- WIN -->
+
+<div id="win">
+
+    <img
+    src="https://raw.githubusercontent.com/TondaFox-site/images/refs/heads/main/unnamed-removebg-preview.png">
+
+    <h1>
+        QUEST SPLNĚN! 🦊
+    </h1>
+
+    <p>
+
+        Našel jsi všechny
+        <strong>3 TondaFox Blocky!</strong>
+
+        <br><br>
+
+        Dokázal jsi projít celým
+        TondaFox světem.
+
+    </p>
+
+
+    <button
+    class="restart"
+    onclick="location.reload()">
+
+        🔄 Hrát znovu
+
+    </button>
+
+</div>
+
+
+<!-- MOBILE -->
+
+<div id="mobile">
+
+    <div>
+
+        <button
+        class="mobile-button"
+        onmousedown="keys.w=true"
+        onmouseup="keys.w=false">
+            ▲
+        </button>
+
+    </div>
+
+    <div>
+
+        <button
+        class="mobile-button"
+        onmousedown="keys.a=true"
+        onmouseup="keys.a=false">
+            ◀
+        </button>
+
+        <button
+        class="mobile-button"
+        onmousedown="keys.s=true"
+        onmouseup="keys.s=false">
+            ▼
+        </button>
+
+        <button
+        class="mobile-button"
+        onmousedown="keys.d=true"
+        onmouseup="keys.d=false">
+            ▶
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- THREE.JS -->
+
+<script type="importmap">
+
+{
+    "imports": {
+        "three":
+        "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+    }
+}
+
+</script>
+
+
+<script type="module">
+
+import * as THREE from "three";
+
+
+/* ==================================================
+   GAME SETTINGS
+================================================== */
+
+const SIZE = 50;
+
+
+/* ==================================================
+   THREE
+================================================== */
+
+const scene =
+    new THREE.Scene();
+
+scene.background =
+    new THREE.Color(
+        0x76cfff
+    );
+
+
+scene.fog =
+    new THREE.Fog(
+        0x76cfff,
+        15,
+        70
+    );
+
+
+const camera =
+    new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth /
+        window.innerHeight,
+        .1,
+        200
+    );
+
+
+camera.position.set(
+    SIZE/2,
+    8,
+    SIZE/2
+);
+
+
+const renderer =
+    new THREE.WebGLRenderer({
+        antialias:true
+    });
+
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
+
+renderer.setPixelRatio(
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
+);
+
+
+renderer.shadowMap.enabled=true;
+
+
+document
+    .getElementById("game")
+    .appendChild(renderer.domElement);
+
+
+/* ==================================================
+   LIGHT
+================================================== */
+
+const ambient =
+    new THREE.HemisphereLight(
+        0xffffff,
+        0x555555,
+        2
+    );
+
+scene.add(ambient);
+
+
+const sun =
+    new THREE.DirectionalLight(
+        0xffffff,
+        2
+    );
+
+sun.position.set(
+    20,
+    50,
+    20
+);
+
+sun.castShadow=true;
+
+scene.add(sun);
+
+
+/* ==================================================
+   MATERIALS
+================================================== */
+
+function material(color){
+
+    return new THREE.MeshLambertMaterial({
+        color
+    });
+
+}
+
+
+const materials={
+
+    grass:material(0x55b938),
+
+    dirt:material(0x89542e),
+
+    stone:material(0x777777),
+
+    wood:material(0x85552d),
+
+    leaves:material(0x2e8c3c),
+
+    water:
+        new THREE.MeshLambertMaterial({
+            color:0x298bd0,
+            transparent:true,
+            opacity:.75
+        }),
+
+    diamond:material(0x22d5df),
+
+    ruby:material(0xe73545),
+
+    gold:material(0xe2bd27),
+
+    tfox:material(0xff7417)
+
+};
+
+
+/* ==================================================
+   BLOCK
+================================================== */
+
+const geometry =
+    new THREE.BoxGeometry(
+        1,1,1
+    );
+
+
+const blocks = new Map();
+
+
+function key(x,y,z){
+
+    return `${x},${y},${z}`;
+
+}
+
+
+function addBlock(
+    x,
+    y,
+    z,
+    type
+){
+
+    if(
+        x<0 ||
+        y<0 ||
+        z<0 ||
+        x>=SIZE ||
+        y>=SIZE ||
+        z>=SIZE
+    )
+        return;
+
+
+    const mesh =
+        new THREE.Mesh(
+            geometry,
+            materials[type] ||
+            materials.stone
+        );
+
+
+    mesh.position.set(
+        x+.5,
+        y+.5,
+        z+.5
+    );
+
+
+    mesh.castShadow=true;
+    mesh.receiveShadow=true;
+
+
+    mesh.userData={
+        x,
+        y,
+        z,
+        type
+    };
+
+
+    scene.add(mesh);
+
+    blocks.set(
+        key(x,y,z),
+        mesh
+    );
+
+}
+
+
+/* ==================================================
+   WORLD GENERATION
+================================================== */
+
+function generateWorld(){
+
+    for(
+        let x=0;
+        x<SIZE;
+        x++
+    ){
+
+        for(
+            let z=0;
+            z<SIZE;
+            z++
+        ){
+
+            /* terrain height */
+
+            const height =
+                5 +
+                Math.floor(
+                    Math.sin(x*.35)*1.5 +
+                    Math.cos(z*.3)*1.5
+                );
+
+
+            for(
+                let y=0;
+                y<=height;
+                y++
+            ){
+
+                let type="stone";
+
+
+                if(y===height){
+
+                    type="grass";
+
+                }
+                else if(
+                    y>=height-2
+                ){
+
+                    type="dirt";
+
+                }
+
+
+                addBlock(
+                    x,
+                    y,
+                    z,
+                    type
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /* TREES */
+
+    for(
+        let i=0;
+        i<25;
+        i++
+    ){
+
+        const x =
+            Math.floor(
+                Math.random()*46
+            )+2;
+
+        const z =
+            Math.floor(
+                Math.random()*46
+            )+2;
+
+        const y=7;
+
+
+        for(
+            let h=0;
+            h<4;
+            h++
+        ){
+
+            addBlock(
+                x,
+                y+h,
+                z,
+                "wood"
+            );
+
+        }
+
+
+        for(
+            let dx=-2;
+            dx<=2;
+            dx++
+        ){
+
+            for(
+                let dz=-2;
+                dz<=2;
+                dz++
+            ){
+
+                if(
+                    Math.abs(dx)+
+                    Math.abs(dz)<=3
+                ){
+
+                    addBlock(
+                        x+dx,
+                        y+4,
+                        z+dz,
+                        "leaves"
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    /* WATER */
+
+    for(
+        let x=12;
+        x<20;
+        x++
+    ){
+
+        for(
+            let z=34;
+            z<42;
+            z++
+        ){
+
+            addBlock(
+                x,
+                6,
+                z,
+                "water"
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ==================================================
+   ORES
+================================================== */
+
+function addOre(
+    type,
+    amount
+){
+
+    let placed=0;
+
+
+    while(
+        placed<amount
+    ){
+
+        const x =
+            Math.floor(
+                Math.random()*SIZE
+            );
+
+        const y =
+            Math.floor(
+                Math.random()*4
+            )+1;
+
+        const z =
+            Math.floor(
+                Math.random()*SIZE
+            );
+
+
+        const k =
+            key(x,y,z);
+
+
+        if(
+            blocks.has(k)
+        ){
+
+            const old =
+                blocks.get(k);
+
+
+            if(
+                old.userData.type==="stone"
+            ){
+
+                scene.remove(old);
+
+                addBlock(
+                    x,
+                    y,
+                    z,
+                    type
+                );
+
+                placed++;
+
+            }
+
+        }
+
+    }
+
+}
+
+
+addOre(
+    "diamond",
+    18
+);
+
+addOre(
+    "ruby",
+    12
+);
+
+addOre(
+    "gold",
+    25
+);
+
+
+/* ==================================================
+   T-FOX BLOCKS
+================================================== */
+
+/*
+   Schválně uložené na konkrétních
+   souřadnicích.
+
+   Hráč je musí najít.
+*/
+
+const targets=[
+
+    {
+        x:7,
+        y:8,
+        z:42
+    },
+
+    {
+        x:39,
+        y:10,
+        z:8
+    },
+
+    {
+        x:43,
+        y:7,
+        z:43
+    }
+
+];
+
+
+targets.forEach(
+    target=>{
+
+        /* odstraníme případný blok */
+
+        const old =
+            blocks.get(
+                key(
+                    target.x,
+                    target.y,
+                    target.z
+                )
+            );
+
+        if(old){
+
+            scene.remove(old);
+
+            blocks.delete(
+                key(
+                    target.x,
+                    target.y,
+                    target.z
+                )
+            );
+
+        }
+
+
+        addBlock(
+            target.x,
+            target.y,
+            target.z,
+            "tfox"
+        );
+
+    }
+);
+
+
+/* ==================================================
+   PLAYER
+================================================== */
+
+const player={
+
+    x:25.5,
+
+    y:8,
+
+    z:25.5,
+
+    velocityY:0,
+
+    onGround:false
+
+};
+
+
+let yaw=0;
+let pitch=0;
+
+
+const keys={};
+
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        keys[e.key.toLowerCase()]=true;
+
+
+        if(
+            e.code==="Space" &&
+            player.onGround
+        ){
+
+            player.velocityY=.25;
+
+            player.onGround=false;
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    e=>{
+
+        keys[e.key.toLowerCase()]=false;
+
+    }
+);
+
+
+/* ==================================================
+   MOUSE LOOK
+================================================== */
+
+document.addEventListener(
+    "mousemove",
+    e=>{
+
+        if(
+            document.pointerLockElement !==
+            renderer.domElement
+        )
+            return;
+
+
+        yaw -=
+            e.movementX*.002;
+
+
+        pitch -=
+            e.movementY*.002;
+
+
+        pitch =
+            Math.max(
+                -1.45,
+                Math.min(
+                    1.45,
+                    pitch
+                )
+            );
+
+    }
+);
+
+
+renderer.domElement.addEventListener(
+    "click",
+    ()=>{
+
+        if(
+            document.pointerLockElement !==
+            renderer.domElement
+        ){
+
+            renderer.domElement
+                .requestPointerLock();
+
+        }else{
+
+            mine();
+
+        }
+
+    }
+);
+
+
+/* ==================================================
+   COLLISION
+================================================== */
+
+function solidAt(
+    x,
+    y,
+    z
+){
+
+    return blocks.has(
+        key(
+            Math.floor(x),
+            Math.floor(y),
+            Math.floor(z)
+        )
+    );
+
+}
+
+
+function movePlayer(){
+
+    const speed=.075;
+
+
+    let dx=0;
+    let dz=0;
+
+
+    if(keys.w)
+        dz-=1;
+
+    if(keys.s)
+        dz+=1;
+
+    if(keys.a)
+        dx-=1;
+
+    if(keys.d)
+        dx+=1;
+
+
+    if(dx!==0 || dz!==0){
+
+        const length =
+            Math.hypot(
+                dx,
+                dz
+            );
+
+        dx/=length;
+        dz/=length;
+
+
+        const sin =
+            Math.sin(yaw);
+
+        const cos =
+            Math.cos(yaw);
+
+
+        const moveX =
+            dx*cos -
+            dz*sin;
+
+        const moveZ =
+            dx*sin +
+            dz*cos;
+
+
+        const nx =
+            player.x+
+            moveX*speed;
+
+        const nz =
+            player.z+
+            moveZ*speed;
+
+
+        if(
+            !solidAt(
+                nx,
+                player.y,
+                player.z
+            )
+        ){
+
+            player.x=nx;
+
+        }
+
+
+        if(
+            !solidAt(
+                player.x,
+                player.y,
+                nz
+            )
+        ){
+
+            player.z=nz;
+
+        }
+
+    }
+
+
+    /* gravity */
+
+    player.velocityY -= .012;
+
+    player.y +=
+        player.velocityY;
+
+
+    /* ground */
+
+    const below =
+        Math.floor(
+            player.y-.01
+        );
+
+
+    if(
+        solidAt(
+            player.x,
+            below,
+            player.z
+        )
+    ){
+
+        player.y=
+            below+1.65;
+
+        player.velocityY=0;
+
+        player.onGround=true;
+
+    }else{
+
+        player.onGround=false;
+
+    }
+
+
+    /* world limits */
+
+    player.x =
+        Math.max(
+            1,
+            Math.min(
+                SIZE-1,
+                player.x
+            )
+        );
+
+    player.z =
+        Math.max(
+            1,
+            Math.min(
+                SIZE-1,
+                player.z
+            )
+        );
+
+    player.y =
+        Math.max(
+            1.7,
+            Math.min(
+                SIZE-1,
+                player.y
+            )
+        );
+
+}
+
+
+/* ==================================================
+   MINE
+================================================== */
+
+const raycaster =
+    new THREE.Raycaster();
+
+
+function mine(){
+
+    raycaster.setFromCamera(
+        new THREE.Vector2(0,0),
+        camera
+    );
+
+
+    const hits =
+        raycaster.intersectObjects(
+            Array.from(
+                blocks.values()
+            )
+        );
+
+
+    if(!hits.length)
+        return;
+
+
+    const hit =
+        hits[0];
+
+
+    if(
+        hit.distance>6
+    )
+        return;
+
+
+    const mesh =
+        hit.object;
+
+
+    const data =
+        mesh.userData;
+
+
+    /* T-FOX BLOCK */
+
+    if(
+        data.type==="tfox"
+    ){
+
+        collectTarget(
+            data
+        );
+
+        return;
+
+    }
+
+
+    /* remove normal block */
+
+    scene.remove(mesh);
+
+    blocks.delete(
+        key(
+            data.x,
+            data.y,
+            data.z
+        )
+    );
+
+}
+
+
+/* ==================================================
+   TARGETS
+================================================== */
+
+let found=0;
+
+
+const collected =
+    new Set();
+
+
+function collectTarget(
+    data
+){
+
+    const k =
+        key(
+            data.x,
+            data.y,
+            data.z
+        );
+
+
+    if(
+        collected.has(k)
+    )
+        return;
+
+
+    collected.add(k);
+
+    found++;
+
+
+    const mesh =
+        blocks.get(k);
+
+
+    if(mesh){
+
+        scene.remove(mesh);
+
+        blocks.delete(k);
+
+    }
+
+
+    document.getElementById(
+        "found"
+    ).textContent =
+        `TondaFox Blocky: ${found} / 3`;
+
+
+    document.getElementById(
+        "targetInfo"
+    ).textContent =
+        "🔥 TondaFox Block nalezen!";
+
+
+    if(found>=3){
+
+        setTimeout(
+            ()=>{
+                document.getElementById(
+                    "win"
+                ).style.display="flex";
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   CAMERA
+================================================== */
+
+function updateCamera(){
+
+    camera.position.set(
+        player.x,
+        player.y+0.2,
+        player.z
+    );
+
+
+    camera.rotation.order=
+        "YXZ";
+
+
+    camera.rotation.y=
+        yaw;
+
+    camera.rotation.x=
+        pitch;
+
+}
+
+
+/* ==================================================
+   COORDINATES
+================================================== */
+
+function updateCoordinates(){
+
+    document.getElementById(
+        "coordinates"
+    ).innerHTML=`
+
+        X: ${Math.floor(player.x)}
+        <br>
+
+        Y: ${Math.floor(player.y)}
+        <br>
+
+        Z: ${Math.floor(player.z)}
+
+    `;
+
+}
+
+
+/* ==================================================
+   DAY / NIGHT
+================================================== */
+
+let time=0;
+
+
+function updateDayNight(){
+
+    time+=.00025;
+
+
+    const sunX =
+        Math.cos(time)*40;
+
+    const sunY =
+        Math.sin(time)*40+20;
+
+
+    sun.position.set(
+        sunX,
+        sunY,
+        20
+    );
+
+
+    const day =
+        Math.max(
+            .15,
+            Math.sin(time)*.5+.5
+        );
+
+
+    ambient.intensity=
+        .6+day*1.2;
+
+
+    sun.intensity=
+        .4+day*2;
+
+
+    const sky =
+        new THREE.Color();
+
+
+    sky.setHSL(
+        .56,
+        .65,
+        .45*day+.12
+    );
+
+
+    scene.background=sky;
+
+    scene.fog.color=sky;
+
+}
+
+
+/* ==================================================
+   START
+================================================== */
+
+function startGame(){
+
+    document.getElementById(
+        "start"
+    ).style.display="none";
+
+
+    renderer.domElement
+        .requestPointerLock();
+
+}
+
+
+window.startGame=
+    startGame;
+
+
+/* ==================================================
+   RESIZE
+================================================== */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+    }
+);
+
+
+/* ==================================================
+   GAME LOOP
+================================================== */
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    movePlayer();
+
+    updateCamera();
+
+    updateCoordinates();
+
+    updateDayNight();
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+
+generateWorld();
+
+animate();
+
+</script>
+
+</body>
+</html>
